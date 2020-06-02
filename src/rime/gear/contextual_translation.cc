@@ -14,7 +14,7 @@ bool ContextualTranslation::Replenish() {
   while (!translation_->exhausted() &&
          cache_.size() + queue.size() < kContextualSearchLimit) {
     auto cand = translation_->Peek();
-    DLOG(INFO) << cand->text() << " cache/queue: "
+    LOG(INFO) << cand->text() << " cache/queue: "
                << cache_.size() << "/" << queue.size();
     if (cand->type() == "phrase" || cand->type() == "user_phrase" ||
 	cand->type() == "table" || cand->type() == "user_table") {
@@ -43,7 +43,7 @@ an<Phrase> ContextualTranslation::Evaluate(an<Phrase> phrase) {
   sentence->Extend(phrase->entry(), phrase->end(), is_rear, preceding_text_,
                    grammar_);
   phrase->set_weight(sentence->weight());
-  DLOG(INFO) << "contextual suggestion: " << phrase->text()
+  LOG(INFO) << "contextual suggestion: " << phrase->text()
              << " weight: " << phrase->weight();
   return phrase;
 }
@@ -54,7 +54,7 @@ static bool compare_by_weight_desc(const an<Phrase>& a, const an<Phrase>& b) {
 
 void ContextualTranslation::AppendToCache(vector<of<Phrase>>& queue) {
   if (queue.empty()) return;
-  DLOG(INFO) << "appending to cache " << queue.size() << " candidates.";
+  LOG(INFO) << "appending to cache " << queue.size() << " candidates.";
   std::sort(queue.begin(), queue.end(), compare_by_weight_desc);
   std::copy(queue.begin(), queue.end(), std::back_inserter(cache_));
   queue.clear();

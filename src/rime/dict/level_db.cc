@@ -193,14 +193,14 @@ bool LevelDb::Fetch(const string& key, string* value) {
 bool LevelDb::Update(const string& key, const string& value) {
   if (!loaded() || readonly())
     return false;
-  DLOG(INFO) << "update db entry: " << key << " => " << value;
+  LOG(INFO) << "update db entry: " << key << " => " << value;
   return db_->Update(key, value, in_transaction());
 }
 
 bool LevelDb::Erase(const string& key) {
   if (!loaded() || readonly())
     return false;
-  DLOG(INFO) << "erase db entry: " << key;
+  LOG(INFO) << "erase db entry: " << key;
   return db_->Erase(key, in_transaction());
 }
 

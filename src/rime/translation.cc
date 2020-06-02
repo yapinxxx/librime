@@ -123,7 +123,7 @@ bool MergedTranslation::Next() {
   }
   translations_[elected_]->Next();
   if (translations_[elected_]->exhausted()) {
-    DLOG(INFO) << "translation #" << elected_ << " has been exhausted.";
+    LOG(INFO) << "translation #" << elected_ << " has been exhausted.";
     translations_.erase(translations_.begin() + elected_);
   }
   Elect();
@@ -158,7 +158,7 @@ void MergedTranslation::Elect() {
   }
   elected_ = k;
   if (k >= translations_.size()) {
-    DLOG(WARNING) << "failed to elect a winner translation.";
+    LOG(WARNING) << "failed to elect a winner translation.";
     set_exhausted(true);
   }
   else {

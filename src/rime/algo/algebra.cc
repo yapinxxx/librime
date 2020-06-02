@@ -125,7 +125,7 @@ bool Projection::Apply(Script* value) {
   int round = 0;
   for (an<Calculation>& x : calculation_) {
     ++round;
-    DLOG(INFO) << "round #" << round;
+    LOG(INFO) << "round #" << round;
     Script temp;
     for (const Script::value_type& v : *value) {
       Spelling s(v.first);

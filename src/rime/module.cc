@@ -28,7 +28,7 @@ void ModuleManager::LoadModule(RimeModule* module) {
       loaded_.find(module) != loaded_.end()) {
     return;
   }
-  DLOG(INFO) << "loading module: " << module;
+  LOG(INFO) << "loading module: " << module;
   loaded_.insert(module);
   if (module->initialize != NULL) {
     module->initialize();

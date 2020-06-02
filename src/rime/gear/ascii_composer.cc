@@ -220,7 +220,7 @@ bool AsciiComposer::ToggleAsciiModeWithKey(int key_code) {
 
 void AsciiComposer::SwitchAsciiMode(bool ascii_mode,
                                     AsciiModeSwitchStyle style) {
-  DLOG(INFO) << "ascii mode: " << ascii_mode << ", switch style: " << style;
+  LOG(INFO) << "ascii mode: " << ascii_mode << ", switch style: " << style;
   Context* ctx = engine_->context();
   if (ctx->IsComposing()) {
     connection_.disconnect();

@@ -16,17 +16,17 @@ FallbackSegmentor::FallbackSegmentor(const Ticket& ticket)
 
 bool FallbackSegmentor::Proceed(Segmentation* segmentation) {
   int len = segmentation->GetCurrentSegmentLength();
-  DLOG(INFO) << "current segment length: " << len;
+  LOG(INFO) << "current segment length: " << len;
   if (len > 0)
     return false;
 
   const string& input(segmentation->input());
   int k = segmentation->GetCurrentStartPosition();
-  DLOG(INFO) << "current start pos: " << k;
+  LOG(INFO) << "current start pos: " << k;
   if (k == input.length())
     return false;
 
-  DLOG(INFO) << "segmentation: " << *segmentation;
+  LOG(INFO) << "segmentation: " << *segmentation;
   if (!segmentation->empty() &&
       segmentation->back().start == segmentation->back().end) {
     segmentation->pop_back();
@@ -37,7 +37,7 @@ bool FallbackSegmentor::Proceed(Segmentation* segmentation) {
     // append one character to the last raw segment
     if (last.HasTag("raw")) {
       last.end = k + 1;
-      DLOG(INFO) << "extend previous raw segment to ["
+      LOG(INFO) << "extend previous raw segment to ["
                  << last.start << ", " << last.end << ")";
       // mark redo translation (in case it's been previously translated)
       last.Clear();
@@ -47,7 +47,7 @@ bool FallbackSegmentor::Proceed(Segmentation* segmentation) {
   }
   {
     Segment segment(k, k + 1);
-    DLOG(INFO) << "add a raw segment ["
+    LOG(INFO) << "add a raw segment ["
                << segment.start << ", " << segment.end << ")";
     segment.tags.insert("raw");
     segmentation->Forward();

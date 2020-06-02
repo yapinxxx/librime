@@ -492,18 +492,18 @@ table::TailIndex* Table::BuildTailIndex(const Code& prefix,
     return NULL;
   }
   const auto& page(vocabulary.find(-1)->second);
-  DLOG(INFO) << "page size: " << page.entries.size();
+  LOG(INFO) << "page size: " << page.entries.size();
   auto index = CreateArray<table::LongEntry>(page.entries.size());
   if (!index) {
     return NULL;
   }
   size_t count = 0;
   for (const auto& src : page.entries) {
-    DLOG(INFO) << "count: " << count;
-    DLOG(INFO) << "entry: " << src->text;
+    LOG(INFO) << "count: " << count;
+    LOG(INFO) << "entry: " << src->text;
     auto& dest(index->at[count++]);
     size_t extra_code_length = src->code.size() - Code::kIndexCodeMaxLength;
-    DLOG(INFO) << "extra code length: " << extra_code_length;
+    LOG(INFO) << "extra code length: " << extra_code_length;
     dest.extra_code.size = extra_code_length;
     dest.extra_code.at = Allocate<SyllableId>(extra_code_length);
     if (!dest.extra_code.at) {

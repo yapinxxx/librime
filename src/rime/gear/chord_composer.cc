@@ -104,7 +104,7 @@ ProcessResult ChordComposer::ProcessKeyEvent(const KeyEvent& key_event) {
     // save raw input
     if (!engine_->context()->IsComposing() || !raw_sequence_.empty()) {
       raw_sequence_.push_back(ch);
-      DLOG(INFO) << "update raw sequence: " << raw_sequence_;
+      LOG(INFO) << "update raw sequence: " << raw_sequence_;
     }
   }
   auto result = ProcessChordingKey(key_event);
@@ -195,7 +195,7 @@ void ChordComposer::OnContextUpdate(Context* ctx) {
   else if (composing_) {
     composing_ = false;
     raw_sequence_.clear();
-    DLOG(INFO) << "clear raw sequence.";
+    LOG(INFO) << "clear raw sequence.";
   }
 }
 
@@ -206,7 +206,7 @@ void ChordComposer::OnUnhandledKey(Context* ctx, const KeyEvent& key) {
   if ((key.modifier() & ~kShiftMask) == 0 &&
       key.keycode() >= 0x20 && key.keycode() <= 0x7e) {
     raw_sequence_.clear();
-    DLOG(INFO) << "clear raw sequence.";
+    LOG(INFO) << "clear raw sequence.";
   }
 }
 

@@ -56,15 +56,15 @@ bool AffixSegmentor::Proceed(Segmentation* segmentation) {
   if (prefix_.empty() || !boost::starts_with(active_input, prefix_)) {
     return true;
   }
-  DLOG(INFO) << "affix_segmentor: " << active_input;
-  DLOG(INFO) << "segmentation: " << *segmentation;
+  LOG(INFO) << "affix_segmentor: " << active_input;
+  LOG(INFO) << "segmentation: " << *segmentation;
   // just prefix
   if (active_input.length() == prefix_.length()) {
     Segment& prefix_segment(segmentation->back());
     prefix_segment.tags.erase(tag_);
     prefix_segment.prompt = tips_;
     prefix_segment.tags.insert(tag_ + "_prefix");
-    DLOG(INFO) << "prefix: " << *segmentation;
+    LOG(INFO) << "prefix: " << *segmentation;
     // continue this round
     return true;
   }
@@ -86,7 +86,7 @@ bool AffixSegmentor::Proceed(Segmentation* segmentation) {
   }
   segmentation->Forward();
   segmentation->AddSegment(code_segment);
-  DLOG(INFO) << "prefix+code: " << *segmentation;
+  LOG(INFO) << "prefix+code: " << *segmentation;
   // has suffix?
   if (!suffix_.empty() && boost::ends_with(active_input, suffix_)) {
     k -= suffix_.length();
@@ -103,7 +103,7 @@ bool AffixSegmentor::Proceed(Segmentation* segmentation) {
     suffix_segment.tags.insert("phony");  // do not commit raw input
     segmentation->Forward();
     segmentation->AddSegment(suffix_segment);
-    DLOG(INFO) << "prefix+suffix: " << *segmentation;
+    LOG(INFO) << "prefix+suffix: " << *segmentation;
   }
   // exclusive
   return false;

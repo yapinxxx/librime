@@ -46,7 +46,7 @@ bool KeyBindingProcessor<T>::Accept(const KeyEvent& key_event, Context* ctx) {
   if (binding != key_bindings_.end()) {
     auto action = binding->second;
     RIME_THIS_CALL_AS(T, action)(ctx);
-    DLOG(INFO) << "action key accepted: " << key_event.repr();
+    LOG(INFO) << "action key accepted: " << key_event.repr();
     return true;
   }
   return false;

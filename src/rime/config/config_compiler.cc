@@ -59,7 +59,7 @@ static an<ConfigItem> ResolveReference(ConfigCompiler* compiler,
 static bool MergeTree(an<ConfigItemRef> target, an<ConfigMap> map);
 
 bool IncludeReference::Resolve(ConfigCompiler* compiler) {
-  DLOG(INFO) << "IncludeReference::Resolve(reference = " << reference << ")";
+  LOG(INFO) << "IncludeReference::Resolve(reference = " << reference << ")";
   auto included = ResolveReference(compiler, reference);
   if (!included) {
     return reference.optional;
@@ -75,7 +75,7 @@ bool IncludeReference::Resolve(ConfigCompiler* compiler) {
 }
 
 bool PatchReference::Resolve(ConfigCompiler* compiler) {
-  DLOG(INFO) << "PatchReference::Resolve(reference = " << reference << ")";
+  LOG(INFO) << "PatchReference::Resolve(reference = " << reference << ")";
   auto item = ResolveReference(compiler, reference);
   if (!item) {
     return reference.optional;
@@ -177,11 +177,11 @@ static bool EditNode(an<ConfigItemRef> head,
                      const string& key,
                      const an<ConfigItem>& value,
                      bool merge_tree) {
-  DLOG(INFO) << "edit node: " << key << ", merge_tree: " << merge_tree;
+  LOG(INFO) << "edit node: " << key << ", merge_tree: " << merge_tree;
   bool appending = IsAppending(key);
   bool merging = IsMerging(key, value, merge_tree);
   string path = StripOperator(key, appending || merging);
-  DLOG(INFO) << "appending: " << appending << ", merging: " << merging
+  LOG(INFO) << "appending: " << appending << ", merging: " << merging
              << ", path: " << path;
   auto find_target_node =
       merge_tree ? &TypeCheckedCopyOnWrite : &TraverseCopyOnWrite;
@@ -191,20 +191,20 @@ static bool EditNode(an<ConfigItemRef> head,
     return false;
   }
   if ((appending || merging) && **target) {
-    DLOG(INFO) << "writer: editing node";
+    LOG(INFO) << "writer: editing node";
     return !value ||  // no-op
         (appending && (AppendToString(target, As<ConfigValue>(value)) ||
                        AppendToList(target, As<ConfigList>(value)))) ||
         (merging && MergeTree(target, As<ConfigMap>(value)));
   } else {
-    DLOG(INFO) << "writer: overwriting node";
+    LOG(INFO) << "writer: overwriting node";
     *target = value;
     return true;
   }
 }
 
 bool PatchLiteral::Resolve(ConfigCompiler* compiler) {
-  DLOG(INFO) << "PatchLiteral::Resolve()";
+  LOG(INFO) << "PatchLiteral::Resolve()";
   bool success = true;
   for (const auto& entry : *patch) {
     const auto& key = entry.first;
@@ -229,7 +229,7 @@ static void InsertByPriority(vector<of<Dependency>>& list,
 }
 
 void ConfigDependencyGraph::Add(an<Dependency> dependency) {
-  DLOG(INFO) << "ConfigDependencyGraph::Add(), node_stack.size() = "
+  LOG(INFO) << "ConfigDependencyGraph::Add(), node_stack.size() = "
              << node_stack.size();
   if (node_stack.empty()) return;
   const auto& target = node_stack.back();
@@ -238,7 +238,7 @@ void ConfigDependencyGraph::Add(an<Dependency> dependency) {
   auto& target_deps = deps[target_path];
   bool target_was_pending = !target_deps.empty();
   InsertByPriority(target_deps, dependency);
-  DLOG(INFO) << "target_path = " << target_path
+  LOG(INFO) << "target_path = " << target_path
              << ", #deps = " << target_deps.size();
   if (target_was_pending ||  // so was all ancestors
       key_stack.size() == 1) {  // this is the progenitor
@@ -256,7 +256,7 @@ void ConfigDependencyGraph::Add(an<Dependency> dependency) {
     // Pending children should be resolved before applying __include or __patch
     InsertByPriority(parent_deps,
                      New<PendingChild>(parent_path + "/" + last_key, *child));
-    DLOG(INFO) << "parent_path = " << parent_path
+    LOG(INFO) << "parent_path = " << parent_path
                << ", #deps = " << parent_deps.size();
     if (parent_was_pending ||  // so was all ancestors
         keys.size() == 1) {  // this parent is the progenitor
@@ -344,9 +344,9 @@ static bool ResolveBlockingDependencies(ConfigCompiler* compiler,
   if (!compiler->blocking(path)) {
     return true;
   }
-  DLOG(INFO) << "blocking node: " << path;
+  LOG(INFO) << "blocking node: " << path;
   if (compiler->ResolveDependencies(path)) {
-    DLOG(INFO) << "resolved blocking node:" << path;
+    LOG(INFO) << "resolved blocking node:" << path;
     return true;
   }
   return false;
@@ -355,7 +355,7 @@ static bool ResolveBlockingDependencies(ConfigCompiler* compiler,
 static an<ConfigItem> GetResolvedItem(ConfigCompiler* compiler,
                                       an<ConfigResource> resource,
                                       const string& path) {
-  DLOG(INFO) << "GetResolvedItem(" << resource->resource_id << ":" << path << ")";
+  LOG(INFO) << "GetResolvedItem(" << resource->resource_id << ":" << path << ")";
   string node_path = resource->resource_id + ":";
   an<ConfigItemRef> node = resource;
   if (path.empty() || path == "/") {
@@ -381,7 +381,7 @@ static an<ConfigItem> GetResolvedItem(ConfigCompiler* compiler,
         node.reset();
       }
     } else if (Is<ConfigMap>(item)) {
-      DLOG(INFO) << "advance with key: " << key;
+      LOG(INFO) << "advance with key: " << key;
       (node_path += "/") += key;
       node = New<ConfigMapEntryRef>(nullptr, As<ConfigMap>(item), key);
     } else {
@@ -419,7 +419,7 @@ static an<ConfigItem> ResolveReference(ConfigCompiler* compiler,
                                        const Reference& reference) {
   auto resource = compiler->GetCompiledResource(reference.resource_id);
   if (!resource) {
-    DLOG(INFO) << "resource not loaded, compiling: " << reference.resource_id;
+    LOG(INFO) << "resource not loaded, compiling: " << reference.resource_id;
     resource = compiler->Compile(reference.resource_id);
     if (!resource->loaded) {
       if (reference.optional) {
@@ -440,7 +440,7 @@ static bool ParseInclude(ConfigCompiler* compiler,
                          const an<ConfigItem>& item) {
   if (Is<ConfigValue>(item)) {
     auto path = As<ConfigValue>(item)->str();
-    DLOG(INFO) << "ParseInclude(" << path << ")";
+    LOG(INFO) << "ParseInclude(" << path << ")";
     compiler->AddDependency(
         New<IncludeReference>(compiler->CreateReference(path)));
     return true;
@@ -474,13 +474,13 @@ static bool ParsePatch(ConfigCompiler* compiler,
                        const an<ConfigItem>& item) {
   if (Is<ConfigValue>(item)) {
     auto path = As<ConfigValue>(item)->str();
-    DLOG(INFO) << "ParsePatch(" << path << ")";
+    LOG(INFO) << "ParsePatch(" << path << ")";
     compiler->AddDependency(
         New<PatchReference>(compiler->CreateReference(path)));
     return true;
   }
   if (Is<ConfigMap>(item)) {
-    DLOG(INFO) << "ParsePatch(<literal>)";
+    LOG(INFO) << "ParsePatch(<literal>)";
     compiler->AddDependency(New<PatchLiteral>(As<ConfigMap>(item)));
     return true;
   }
@@ -488,7 +488,7 @@ static bool ParsePatch(ConfigCompiler* compiler,
 }
 
 bool ConfigCompiler::Parse(const string& key, const an<ConfigItem>& item) {
-  DLOG(INFO) << "ConfigCompiler::Parse(" << key << ")";
+  LOG(INFO) << "ConfigCompiler::Parse(" << key << ")";
   if (key == INCLUDE_DIRECTIVE) {
     return ParseInclude(this, item);
   }
@@ -499,7 +499,7 @@ bool ConfigCompiler::Parse(const string& key, const an<ConfigItem>& item) {
 }
 
 bool ConfigCompiler::Link(an<ConfigResource> target) {
-  DLOG(INFO) << "Link(" << target->resource_id << ")";
+  LOG(INFO) << "Link(" << target->resource_id << ")";
   auto found = graph_->resources.find(target->resource_id);
   if (found == graph_->resources.end()) {
     LOG(ERROR) << "resource not found: " << target->resource_id;
@@ -520,7 +520,7 @@ static bool HasCircularDependencies(ConfigDependencyGraph* graph,
 }
 
 bool ConfigCompiler::ResolveDependencies(const string& path) {
-  DLOG(INFO) << "ResolveDependencies(" << path << ")";
+  LOG(INFO) << "ResolveDependencies(" << path << ")";
   auto found = graph_->deps.find(path);
   if (found == graph_->deps.end()) {
     return true;
@@ -540,7 +540,7 @@ bool ConfigCompiler::ResolveDependencies(const string& path) {
     iter = deps.erase(iter);
   }
   graph_->resolve_chain.pop_back();
-  DLOG(INFO) << "all dependencies resolved.";
+  LOG(INFO) << "all dependencies resolved.";
   return true;
 }
 

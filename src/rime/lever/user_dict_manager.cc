@@ -129,7 +129,7 @@ int UserDictManager::Export(const string& dict_name,
     LOG(ERROR) << ex.what();
     return -1;
   }
-  DLOG(INFO) << num_entries << " entries exported.";
+  LOG(INFO) << num_entries << " entries exported.";
   return num_entries;
 }
 
@@ -155,7 +155,7 @@ int UserDictManager::Import(const string& dict_name,
     LOG(ERROR) << ex.what();
     return -1;
   }
-  DLOG(INFO) << num_entries << " entries imported.";
+  LOG(INFO) << num_entries << " entries imported.";
   return num_entries;
 }
 

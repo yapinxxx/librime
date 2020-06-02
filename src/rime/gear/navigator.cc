@@ -115,7 +115,7 @@ void Navigator::BeginMove(Context* ctx) {
 }
 
 bool Navigator::JumpLeft(Context* ctx, size_t start_pos) {
-  DLOG(INFO) << "jump left.";
+  LOG(INFO) << "jump left.";
   size_t caret_pos = ctx->caret_pos();
   size_t stop = spans_.PreviousStop(caret_pos);
   if (stop < start_pos) {
@@ -129,7 +129,7 @@ bool Navigator::JumpLeft(Context* ctx, size_t start_pos) {
 }
 
 bool Navigator::JumpRight(Context* ctx, size_t start_pos) {
-  DLOG(INFO) << "jump right.";
+  LOG(INFO) << "jump right.";
   size_t caret_pos = ctx->caret_pos();
   if (caret_pos == ctx->input().length()) {
     caret_pos = start_pos;  // rewind
@@ -143,7 +143,7 @@ bool Navigator::JumpRight(Context* ctx, size_t start_pos) {
 }
 
 bool Navigator::MoveLeft(Context* ctx) {
-  DLOG(INFO) << "navigate left.";
+  LOG(INFO) << "navigate left.";
   size_t caret_pos = ctx->caret_pos();
   if (caret_pos == 0)
     return false;
@@ -152,7 +152,7 @@ bool Navigator::MoveLeft(Context* ctx) {
 }
 
 bool Navigator::MoveRight(Context* ctx) {
-  DLOG(INFO) << "navigate right.";
+  LOG(INFO) << "navigate right.";
   size_t caret_pos = ctx->caret_pos();
   if (caret_pos >= ctx->input().length())
     return false;
@@ -161,7 +161,7 @@ bool Navigator::MoveRight(Context* ctx) {
 }
 
 bool Navigator::GoHome(Context* ctx) {
-  DLOG(INFO) << "navigate home.";
+  LOG(INFO) << "navigate home.";
   size_t caret_pos = ctx->caret_pos();
   const Composition& comp = ctx->composition();
   if (!comp.empty()) {
@@ -185,7 +185,7 @@ bool Navigator::GoHome(Context* ctx) {
 }
 
 bool Navigator::GoToEnd(Context* ctx) {
-  DLOG(INFO) << "navigate end.";
+  LOG(INFO) << "navigate end.";
   size_t end_pos = ctx->input().length();
   if (ctx->caret_pos() != end_pos) {
     ctx->set_caret_pos(end_pos);

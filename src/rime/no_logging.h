@@ -47,13 +47,13 @@ class Voidify {
 #define CHECK_STRNE(str1, str2) RIME_NO_CHECK
 #define CHECK_STRCASENE(str1, str2) RIME_NO_CHECK
 
-#define DLOG(severity) LOG(severity)
+#define LOG(severity) LOG(severity)
 #define DVLOG(verboselevel) VLOG(verboselevel)
-#define DLOG_IF(severity, condition) LOG_IF(severity, condition)
-#define DLOG_EVERY_N(severity, n) LOG_EVERY_N(severity, n)
-#define DLOG_IF_EVERY_N(severity, condition, n) \
+#define LOG_IF(severity, condition) LOG_IF(severity, condition)
+#define LOG_EVERY_N(severity, n) LOG_EVERY_N(severity, n)
+#define LOG_IF_EVERY_N(severity, condition, n) \
   LOG_IF_EVERY_N(severity, condition, n)
-#define DLOG_ASSERT(condition) LOG_ASSERT(condition)
+#define LOG_ASSERT(condition) LOG_ASSERT(condition)
 
 #define DCHECK(condition) CHECK(condition)
 #define DCHECK_EQ(val1, val2) CHECK_EQ(val1, val2)

@@ -177,7 +177,7 @@ an<ConfigItemRef> TypeCheckedCopyOnWrite(an<ConfigItemRef> parent,
 
 an<ConfigItemRef> TraverseCopyOnWrite(an<ConfigItemRef> head,
                                       const string& path) {
-  DLOG(INFO) << "TraverseCopyOnWrite(" << path << ")";
+  LOG(INFO) << "TraverseCopyOnWrite(" << path << ")";
   if (path.empty() || path == "/") {
     return head;
   }
@@ -220,7 +220,7 @@ string ConfigData::JoinPath(const vector<string>& keys) {
 }
 
 an<ConfigItem> ConfigData::Traverse(const string& path) {
-  DLOG(INFO) << "traverse: " << path;
+  LOG(INFO) << "traverse: " << path;
   if (path.empty() || path == "/") {
     return root;
   }

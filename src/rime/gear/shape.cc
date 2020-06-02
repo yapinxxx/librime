@@ -37,7 +37,7 @@ void ShapeFormatter::Format(string* text) {
 }
 
 ProcessResult ShapeProcessor::ProcessKeyEvent(const KeyEvent& key_event) {
-  DLOG(INFO) << "shape_processor: " << key_event;
+  LOG(INFO) << "shape_processor: " << key_event;
   if (!engine_->context()->get_option("full_shape")) {
     return kNoop;
   }

@@ -55,7 +55,7 @@ struct DfsState {
     return NextEntry();
   }
   bool Backdate(const string& prefix) {
-    DLOG(INFO) << "backdate; prefix: " << prefix;
+    LOG(INFO) << "backdate; prefix: " << prefix;
     if (!accessor->Reset()) {
       LOG(WARNING) << "backdating failed for '" << prefix << "'.";
       return false;
@@ -69,7 +69,7 @@ void DfsState::RecruitEntry(size_t pos) {
                                            credibility.back());
   if (e) {
     e->code = code;
-    DLOG(INFO) << "add entry at pos " << pos;
+    LOG(INFO) << "add entry at pos " << pos;
     (*collector)[pos].push_back(e);
   }
 }
@@ -207,10 +207,10 @@ void UserDictionary::DfsLookup(const SyllableGraph& syll_graph,
   if (index == syll_graph.indices.end()) {
     return;
   }
-  DLOG(INFO) << "dfs lookup starts from " << current_pos;
+  LOG(INFO) << "dfs lookup starts from " << current_pos;
   string prefix;
   for (const auto& spelling : index->second) {
-    DLOG(INFO) << "prefix: '" << current_prefix << "'"
+    LOG(INFO) << "prefix: '" << current_prefix << "'"
                << ", syll_id: " << spelling.first
                << ", num_spellings: " << spelling.second.size();
     state->code.push_back(spelling.first);
@@ -231,14 +231,14 @@ void UserDictionary::DfsLookup(const SyllableGraph& syll_graph,
       }
       BOOST_SCOPE_EXIT_END
       size_t end_pos = props->end_pos;
-      DLOG(INFO) << "edge: [" << current_pos << ", " << end_pos << ")";
+      LOG(INFO) << "edge: [" << current_pos << ", " << end_pos << ")";
       if (prefix != state->key) {  // 'a b c |d ' > 'a b c \tabracadabra'
-        DLOG(INFO) << "forward scanning for '" << prefix << "'.";
+        LOG(INFO) << "forward scanning for '" << prefix << "'.";
         if (!state->ForwardScan(prefix))  // reached the end of db
           continue;
       }
       while (state->IsExactMatch(prefix)) {  // 'b |e ' vs. 'b e \tBe'
-        DLOG(INFO) << "match found for '" << prefix << "'.";
+        LOG(INFO) << "match found for '" << prefix << "'.";
         state->RecruitEntry(end_pos);
         if (!state->NextEntry())  // reached the end of db
           break;
@@ -308,11 +308,11 @@ size_t UserDictionary::LookupWords(UserDictEntryIterator* result,
       *resume_key = kEnd;
       return 0;
     }
-    DLOG(INFO) << "resume lookup after: " << key;
+    LOG(INFO) << "resume lookup after: " << key;
   }
   string last_key(key);
   while (accessor->GetNextRecord(&key, &value)) {
-    DLOG(INFO) << "key : " << key << ", value: " << value;
+    LOG(INFO) << "key : " << key << ", value: " << value;
     bool is_exact_match = (len < key.length() && key[len] == ' ');
     if (!is_exact_match && !predictive) {
       key = last_key;
@@ -340,7 +340,7 @@ size_t UserDictionary::LookupWords(UserDictEntryIterator* result,
   }
   if (resume_key) {
     *resume_key = key;
-    DLOG(INFO) << "resume key reset to: " << *resume_key;
+    LOG(INFO) << "resume key reset to: " << *resume_key;
   }
   return count;
 }
@@ -487,7 +487,7 @@ an<DictEntry> UserDictionary::CreateDictEntry(const string& key,
   if (full_code) {
     *full_code = key.substr(0, separator_pos);
   }
-  DLOG(INFO) << "text = '" << e->text
+  LOG(INFO) << "text = '" << e->text
              << "', code_len = " << e->code.size()
              << ", weight = " << e->weight
              << ", commit_count = " << e->commit_count

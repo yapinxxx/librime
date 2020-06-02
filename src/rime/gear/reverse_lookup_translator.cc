@@ -147,7 +147,7 @@ an<Translation> ReverseLookupTranslator::Query(const string& input,
     Initialize();  // load reverse dict at first use
   if (!dict_ || !dict_->loaded())
     return nullptr;
-  DLOG(INFO) << "input = '" << input
+  LOG(INFO) << "input = '" << input
              << "', [" << segment.start << ", " << segment.end << ")";
 
   const string& preedit(input);

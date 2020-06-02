@@ -85,7 +85,7 @@ bool TextDb::Fetch(const string& key, string* value) {
 bool TextDb::Update(const string& key, const string& value) {
   if (!loaded() || readonly())
     return false;
-  DLOG(INFO) << "update db entry: " << key << " => " << value;
+  LOG(INFO) << "update db entry: " << key << " => " << value;
   data_[key] = value;
   modified_ = true;
   return true;
@@ -94,7 +94,7 @@ bool TextDb::Update(const string& key, const string& value) {
 bool TextDb::Erase(const string& key) {
   if (!loaded() || readonly())
     return false;
-  DLOG(INFO) << "erase db entry: " << key;
+  LOG(INFO) << "erase db entry: " << key;
   if (data_.erase(key) == 0)
     return false;
   modified_ = true;
@@ -198,7 +198,7 @@ bool TextDb::MetaFetch(const string& key, string* value) {
 bool TextDb::MetaUpdate(const string& key, const string& value) {
   if (!loaded() || readonly())
     return false;
-  DLOG(INFO) << "update db metadata: " << key << " => " << value;
+  LOG(INFO) << "update db metadata: " << key << " => " << value;
   metadata_[key] = value;
   modified_ = true;
   return true;
@@ -216,7 +216,7 @@ bool TextDb::LoadFromFile(const string& file) {
     LOG(ERROR) << ex.what();
     return false;
   }
-  DLOG(INFO) << entries << " entries loaded.";
+  LOG(INFO) << entries << " entries loaded.";
   return true;
 }
 
@@ -232,7 +232,7 @@ bool TextDb::SaveToFile(const string& file) {
     LOG(ERROR) << ex.what();
     return false;
   }
-  DLOG(INFO) << entries << " entries saved.";
+  LOG(INFO) << entries << " entries saved.";
   return true;
 }
 

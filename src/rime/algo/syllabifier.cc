@@ -49,7 +49,7 @@ int Syllabifier::BuildSyllableGraph(const string &input,
 
     if (current_pos > farthest)
       farthest = current_pos;
-    DLOG(INFO) << "current_pos: " << current_pos;
+    LOG(INFO) << "current_pos: " << current_pos;
 
     // see where we can go by advancing a syllable
     vector<Prism::Match> matches;
@@ -83,7 +83,7 @@ int Syllabifier::BuildSyllableGraph(const string &input,
         while (end_pos < input.length() &&
                delimiters_.find(input[end_pos]) != string::npos)
           ++end_pos;
-        DLOG(INFO) << "end_pos: " << end_pos;
+        LOG(INFO) << "end_pos: " << end_pos;
         bool matches_input = (current_pos == 0 && end_pos == input.length());
         SpellingMap& spellings(end_vertices[end_pos]);
         SpellingType end_vertex_type = kInvalidSpelling;
@@ -124,7 +124,7 @@ int Syllabifier::BuildSyllableGraph(const string &input,
           accessor.Next();
         }
         if (spellings.empty()) {
-          DLOG(INFO) << "not spelled.";
+          LOG(INFO) << "not spelled.";
           end_vertices.erase(end_pos);
           continue;
         }
@@ -135,13 +135,13 @@ int Syllabifier::BuildSyllableGraph(const string &input,
           end_vertex_type = vertex.second;
         }
         queue.push(Vertex{end_pos, end_vertex_type});
-        DLOG(INFO) << "added to syllable graph, edge: ["
+        LOG(INFO) << "added to syllable graph, edge: ["
                    << current_pos << ", " << end_pos << ")";
       }
     }
   }
 
-  DLOG(INFO) << "remove stale vertices and edges";
+  LOG(INFO) << "remove stale vertices and edges";
   set<int> good;
   good.insert(farthest);
   // fuzzy spellings are immune to invalidation by normal spellings
@@ -184,7 +184,7 @@ int Syllabifier::BuildSyllableGraph(const string &input,
       }
     }
     if (graph->vertices[i] > last_type || graph->edges[i].empty()) {
-      DLOG(INFO) << "remove stale vertex at " << i;
+      LOG(INFO) << "remove stale vertex at " << i;
       graph->vertices.erase(i);
       graph->edges.erase(i);
       continue;
@@ -194,7 +194,7 @@ int Syllabifier::BuildSyllableGraph(const string &input,
   }
 
   if (enable_completion_ && farthest < input.length()) {
-    DLOG(INFO) << "completion enabled";
+    LOG(INFO) << "completion enabled";
     const size_t kExpandSearchLimit = 512;
     vector<Prism::Match> keys;
     prism.ExpandSearch(input.substr(farthest), &keys, kExpandSearchLimit);
@@ -225,11 +225,11 @@ int Syllabifier::BuildSyllableGraph(const string &input,
         }
       }
       if (spellings.empty()) {
-        DLOG(INFO) << "no completion could be made.";
+        LOG(INFO) << "no completion could be made.";
         end_vertices.erase(end_pos);
       }
       else {
-        DLOG(INFO) << "added to syllable graph, completion: ["
+        LOG(INFO) << "added to syllable graph, completion: ["
                    << current_pos << ", " << end_pos << ")";
         farthest = end_pos;
       }
@@ -238,8 +238,8 @@ int Syllabifier::BuildSyllableGraph(const string &input,
 
   graph->input_length = input.length();
   graph->interpreted_length = farthest;
-  DLOG(INFO) << "input length: " << graph->input_length;
-  DLOG(INFO) << "syllabified length: " << graph->interpreted_length;
+  LOG(INFO) << "input length: " << graph->input_length;
+  LOG(INFO) << "syllabified length: " << graph->interpreted_length;
 
   Transpose(graph);
 
@@ -270,7 +270,7 @@ void Syllabifier::CheckOverlappedSpellings(SyllableGraph *graph,
           spelling.second.credibility += kPenaltyForAmbiguousSyllable;
         }
         graph->vertices[joint] = kAmbiguousSpelling;
-        DLOG(INFO) << "ambiguous syllable joint at position " << joint << ".";
+        LOG(INFO) << "ambiguous syllable joint at position " << joint << ".";
       }
       break;
     }

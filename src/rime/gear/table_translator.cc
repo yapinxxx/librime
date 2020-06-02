@@ -165,7 +165,7 @@ bool LazyTableTranslation::FetchMoreUserPhrases() {
   size_t count = user_dict_->LookupWords(&uter_, input_, true,
                                          user_dict_limit_, &user_dict_key_);
   if (count < user_dict_limit_) {
-    DLOG(INFO) << "all user dict entries obtained.";
+    LOG(INFO) << "all user dict entries obtained.";
     user_dict_limit_ = 0;  // no more try
   }
   else {
@@ -178,11 +178,11 @@ bool LazyTableTranslation::FetchMoreTableEntries() {
   if (!dict_ || limit_ == 0)
     return false;
   size_t previous_entry_count = iter_.entry_count();
-  DLOG(INFO) << "fetching more table entries: limit = " << limit_
+  LOG(INFO) << "fetching more table entries: limit = " << limit_
              << ", count = " << previous_entry_count;
   DictEntryIterator more;
   if (dict_->LookupWords(&more, input_, true, limit_) < limit_) {
-    DLOG(INFO) << "all table entries obtained.";
+    LOG(INFO) << "all table entries obtained.";
     limit_ = 0;  // no more try
   }
   else {
@@ -240,7 +240,7 @@ an<Translation> TableTranslator::Query(const string& input,
                                        const Segment& segment) {
   if (!segment.HasTag(tag_))
     return nullptr;
-  DLOG(INFO) << "input = '" << input
+  LOG(INFO) << "input = '" << input
              << "', [" << segment.start << ", " << segment.end << ")";
 
   FinishSession();
@@ -335,7 +335,7 @@ bool TableTranslator::Memorize(const CommitEntry& commit_entry) {
     if (encode_commit_history_) {
       const auto& history(engine_->context()->commit_history());
       if (!history.empty()) {
-        DLOG(INFO) << "history: " << history.repr();
+        LOG(INFO) << "history: " << history.repr();
         auto it = history.rbegin();
         if (it->type == "punct") {  // ending with punctuation
             ++it;
@@ -356,7 +356,7 @@ bool TableTranslator::Memorize(const CommitEntry& commit_entry) {
               phrase.c_str(), phrase.c_str() + phrase.length());
           if (static_cast<int>(phrase_length) > max_phrase_length_)
             break;
-          DLOG(INFO) << "phrase: " << phrase;
+          LOG(INFO) << "phrase: " << phrase;
           encoder_->EncodePhrase(phrase, "0");
         }
       }
@@ -585,7 +585,7 @@ TableTranslator::MakeSentence(const string& input, size_t start,
         auto& dest(collected_entries[end_pos]);
         if (dest.size() >= max_entries)
           continue;
-        DLOG(INFO) << "active input: " << active_input << "[0, " << len << ")";
+        LOG(INFO) << "active input: " << active_input << "[0, " << len << ")";
         UserDictEntryIterator uter;
         string resume_key;
         string key = active_input.substr(0, len);
@@ -605,7 +605,7 @@ TableTranslator::MakeSentence(const string& input, size_t start,
             // also provide words for manual composition
             // uter must not be consumed
             uter.Release(&user_phrase_collector[consumed_length]);
-            DLOG(INFO) << "user phrase[" << consumed_length << "]: "
+            LOG(INFO) << "user phrase[" << consumed_length << "]: "
                        << user_phrase_collector[consumed_length].size();
           }
         }
@@ -623,7 +623,7 @@ TableTranslator::MakeSentence(const string& input, size_t start,
         auto& dest(collected_entries[end_pos]);
         if (!dest.empty())
           continue;
-        DLOG(INFO) << "active input: " << active_input << "[0, " << len << ")";
+        LOG(INFO) << "active input: " << active_input << "[0, " << len << ")";
         UserDictEntryIterator uter;
         string resume_key;
         string key = active_input.substr(0, len);
@@ -643,7 +643,7 @@ TableTranslator::MakeSentence(const string& input, size_t start,
             // also provide words for manual composition
             // uter must not be consumed
             uter.Release(&user_phrase_collector[consumed_length]);
-            DLOG(INFO) << "unity phrase[" << consumed_length << "]: "
+            LOG(INFO) << "unity phrase[" << consumed_length << "]: "
                        << user_phrase_collector[consumed_length].size();
           }
         }
@@ -683,7 +683,7 @@ TableTranslator::MakeSentence(const string& input, size_t start,
             // also provide words for manual composition
             // iter must not be consumed
             collector[consumed_length] = std::move(iter);
-            DLOG(INFO) << "table[" << consumed_length << "]: "
+            LOG(INFO) << "table[" << consumed_length << "]: "
                        << collector[consumed_length].entry_count();
           }
         }

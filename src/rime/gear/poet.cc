@@ -140,7 +140,7 @@ an<Sentence> Poet::MakeSentenceWithStrategy(const WordGraph& graph,
     size_t start_pos = w.first;
     if (sentences.find(start_pos) == sentences.end())
       continue;
-    DLOG(INFO) << "start pos: " << start_pos;
+    LOG(INFO) << "start pos: " << start_pos;
     const auto& source(sentences[start_pos]);
     Strategy::ForEachCandidate(
         source, compare_,
@@ -149,7 +149,7 @@ an<Sentence> Poet::MakeSentenceWithStrategy(const WordGraph& graph,
             size_t end_pos = x.first;
             if (start_pos == 0 && end_pos == total_length)
               continue;  // exclude single words from the result
-            DLOG(INFO) << "end pos: " << end_pos;
+            LOG(INFO) << "end pos: " << end_pos;
             bool is_rear = end_pos == total_length;
             auto& target(sentences[end_pos]);
             // extend candidates with dict entries on a valid edge.
@@ -161,7 +161,7 @@ an<Sentence> Poet::MakeSentenceWithStrategy(const WordGraph& graph,
               auto& best_sentence =
                   Strategy::BestSentenceToUpdate(target, new_sentence);
               if (!best_sentence || compare_(*best_sentence, *new_sentence)) {
-                DLOG(INFO) << "updated sentences " << end_pos << ") with "
+                LOG(INFO) << "updated sentences " << end_pos << ") with "
                            << new_sentence->text() << " weight: "
                            << new_sentence->weight();
                 best_sentence = std::move(new_sentence);

@@ -86,7 +86,7 @@ ProcessResult Punctuator::ProcessKeyEvent(const KeyEvent& key_event) {
   auto punct_definition = config_.GetPunctDefinition(punct_key);
   if (!punct_definition)
     return kNoop;
-  DLOG(INFO) << "punct key: '" << punct_key << "'";
+  LOG(INFO) << "punct key: '" << punct_key << "'";
   if (!AlternatePunct(punct_key, punct_definition)) {
     ctx->PushInput(ch) &&
         punctuation_is_translated(ctx) &&
@@ -114,7 +114,7 @@ bool Punctuator::AlternatePunct(const string& key,
       LOG(ERROR) << "missing candidate for punctuation '" << key << "'.";
       return false;
     }
-    DLOG(INFO) << "alternating punctuation '" << key << "'.";
+    LOG(INFO) << "alternating punctuation '" << key << "'.";
     (segment.selected_index += 1) %= segment.menu->candidate_count();
     segment.status = Segment::kGuess;
     return true;
@@ -151,7 +151,7 @@ bool Punctuator::PairPunct(const an<ConfigItem>& definition) {
       LOG(ERROR) << "missing candidate for paired punctuation.";
       return false;
     }
-    DLOG(INFO) << "alternating paired punctuation.";
+    LOG(INFO) << "alternating paired punctuation.";
     auto& oddness(oddness_[definition]);
     (segment.selected_index += oddness) %= 2;
     oddness = 1 - oddness;
@@ -180,7 +180,7 @@ bool PunctSegmentor::Proceed(Segmentation* segmentation) {
     return true;
   {
     Segment segment(k, k + 1);
-    DLOG(INFO) << "add a punctuation segment ["
+    LOG(INFO) << "add a punctuation segment ["
                << segment.start << ", " << segment.end << ")";
     segment.tags.insert("punct");
     segmentation->AddSegment(segment);
@@ -230,7 +230,7 @@ an<Translation> PunctTranslator::Query(const string& input,
   auto definition = config_.GetPunctDefinition(input);
   if (!definition)
     return nullptr;
-  DLOG(INFO) << "populating punctuation candidates for '" << input << "'.";
+  LOG(INFO) << "populating punctuation candidates for '" << input << "'.";
   auto translation = TranslateUniquePunct(input, segment,
                                           As<ConfigValue>(definition));
   if (!translation)

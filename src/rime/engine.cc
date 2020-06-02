@@ -96,7 +96,7 @@ ConcreteEngine::~ConcreteEngine() {
 }
 
 bool ConcreteEngine::ProcessKey(const KeyEvent& key_event) {
-  DLOG(INFO) << "process key: " << key_event;
+  LOG(INFO) << "process key: " << key_event;
   ProcessResult ret = kNoop;
   for (auto& processor : processors_) {
     ret = processor->ProcessKeyEvent(key_event);
@@ -147,7 +147,7 @@ void ConcreteEngine::Compose(Context* ctx) {
   if (!ctx) return;
   Composition& comp = ctx->composition();
   const string active_input = ctx->input().substr(0, ctx->caret_pos());
-  DLOG(INFO) << "active input: " << active_input;
+  LOG(INFO) << "active input: " << active_input;
   comp.Reset(active_input);
   if (ctx->caret_pos() < ctx->input().length() &&
       ctx->caret_pos() == comp.GetConfirmedPosition()) {
@@ -156,21 +156,21 @@ void ConcreteEngine::Compose(Context* ctx) {
   }
   CalculateSegmentation(&comp);
   TranslateSegments(&comp);
-  DLOG(INFO) << "composition: " << comp.GetDebugText();
+  LOG(INFO) << "composition: " << comp.GetDebugText();
 }
 
 void ConcreteEngine::CalculateSegmentation(Segmentation* segments) {
   while (!segments->HasFinishedSegmentation()) {
     size_t start_pos = segments->GetCurrentStartPosition();
     size_t end_pos = segments->GetCurrentEndPosition();
-    DLOG(INFO) << "start pos: " << start_pos;
-    DLOG(INFO) << "end pos: " << end_pos;
+    LOG(INFO) << "start pos: " << start_pos;
+    LOG(INFO) << "end pos: " << end_pos;
     // recognize a segment by calling the segmentors in turn
     for (auto& segmentor : segmentors_) {
       if (!segmentor->Proceed(segments))
         break;
     }
-    DLOG(INFO) << "segmentation: " << *segments;
+    LOG(INFO) << "segmentation: " << *segments;
     // no advancement
     if (start_pos == segments->GetCurrentEndPosition())
       break;
@@ -196,7 +196,7 @@ void ConcreteEngine::TranslateSegments(Segmentation* segments) {
     if (len == 0)
       continue;
     string input = segments->input().substr(segment.start, len);
-    DLOG(INFO) << "translating segment: " << input;
+    LOG(INFO) << "translating segment: " << input;
     auto menu = New<Menu>();
     for (auto& translator : translators_) {
       auto translation = translator->Query(input, segment);
@@ -222,7 +222,7 @@ void ConcreteEngine::TranslateSegments(Segmentation* segments) {
 void ConcreteEngine::FormatText(string* text) {
   if (formatters_.empty())
     return;
-  DLOG(INFO) << "applying formatters.";
+  LOG(INFO) << "applying formatters.";
   for (auto& formatter : formatters_) {
     formatter->Format(text);
   }
@@ -231,7 +231,7 @@ void ConcreteEngine::FormatText(string* text) {
 void ConcreteEngine::CommitText(string text) {
   context_->commit_history().Push(CommitRecord{"raw", text});
   FormatText(&text);
-  DLOG(INFO) << "committing text: " << text;
+  LOG(INFO) << "committing text: " << text;
   sink_(text);
 }
 
@@ -239,7 +239,7 @@ void ConcreteEngine::OnCommit(Context* ctx) {
   context_->commit_history().Push(ctx->composition(), ctx->input());
   string text = ctx->GetCommitText();
   FormatText(&text);
-  DLOG(INFO) << "committing composition: " << text;
+  LOG(INFO) << "committing composition: " << text;
   sink_(text);
 }
 

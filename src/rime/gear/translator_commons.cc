@@ -104,7 +104,7 @@ void Sentence::Extend(const DictEntry& entry,
   components_.push_back(entry);
   syllable_lengths_.push_back(end_pos - end());
   set_end(end_pos);
-  DLOG(INFO) << "extend sentence " << end_pos << ") "
+  LOG(INFO) << "extend sentence " << end_pos << ") "
              << text() << " weight: " << weight();
 }
 

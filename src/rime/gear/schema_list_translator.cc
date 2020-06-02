@@ -124,7 +124,7 @@ void SchemaListTranslation::LoadSchemaList(Switcher* switcher) {
         Append(cand);
         return /* continue = */true;
       });
-  DLOG(INFO) << "num schemata: " << candies_.size();
+  LOG(INFO) << "num schemata: " << candies_.size();
   bool fix_order = false;
   config->GetBool("switcher/fix_schema_list_order", &fix_order);
   if (fix_order)

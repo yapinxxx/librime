@@ -45,7 +45,7 @@ void CommitEntry::AppendPhrase(const an<Phrase>& phrase) {
 
 bool CommitEntry::Save() const {
   if (memory && !empty()) {
-    DLOG(INFO) << "memorize commit entry: " << text;
+    LOG(INFO) << "memorize commit entry: " << text;
     return memory->Memorize(*this);
   }
   return false;

@@ -116,7 +116,7 @@ bool Context::Select(size_t index) {
   if (auto cand = seg.GetCandidateAt(index)) {
     seg.selected_index = index;
     seg.status = Segment::kSelected;
-    DLOG(INFO) << "Selected: '" << cand->text() << "', index = " << index;
+    LOG(INFO) << "Selected: '" << cand->text() << "', index = " << index;
     select_notifier_(this);
     if (!this->HasMenu())
       this->Commit();
@@ -130,7 +130,7 @@ bool Context::DeleteCurrentSelection() {
     return false;
   Segment& seg(composition_.back());
   if (auto cand = seg.GetSelectedCandidate()) {
-    DLOG(INFO) << "Deleting: '" << cand->text()
+    LOG(INFO) << "Deleting: '" << cand->text()
                << "', selected_index = " << seg.selected_index;
     delete_notifier_(this);
     return true;  // CAVEAT: this doesn't mean anything is deleted for sure
@@ -144,7 +144,7 @@ bool Context::ConfirmCurrentSelection() {
   Segment& seg(composition_.back());
   seg.status = Segment::kSelected;
   if (auto cand = seg.GetSelectedCandidate()) {
-    DLOG(INFO) << "Confirmed: '" << cand->text()
+    LOG(INFO) << "Confirmed: '" << cand->text()
                << "', selected_index = " << seg.selected_index;
   }
   else {
@@ -228,7 +228,7 @@ bool Context::ClearNonConfirmedComposition() {
   }
   if (reverted) {
     composition_.Forward();
-    DLOG(INFO) << "composition: " << composition_.GetDebugText();
+    LOG(INFO) << "composition: " << composition_.GetDebugText();
   }
   return reverted;
 }

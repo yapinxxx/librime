@@ -46,10 +46,10 @@ template <class T>
 inline an<T> ConfigCowRef<T>::CopyOnWrite(const an<T>& container,
                                           const string& key) {
   if (!container) {
-    DLOG(INFO) << "creating node: " << key;
+    LOG(INFO) << "creating node: " << key;
     return New<T>();
   }
-  DLOG(INFO) << "copy on write: " << key;
+  LOG(INFO) << "copy on write: " << key;
   return New<T>(*container);
 }
 

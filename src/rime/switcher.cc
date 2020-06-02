@@ -298,7 +298,7 @@ void Switcher::InitializeComponents() {
   else {
     LOG(WARNING) << "selector not available.";
   }
-  DLOG(INFO) << "num processors: " << processors_.size();
+  LOG(INFO) << "num processors: " << processors_.size();
   if (auto c = Translator::Require("schema_list_translator")) {
     an<Translator> t(c->Create(Ticket(this)));
     translators_.push_back(t);
@@ -313,7 +313,7 @@ void Switcher::InitializeComponents() {
   else {
     LOG(WARNING) << "switch_translator not available.";
   }
-  DLOG(INFO) << "num translators: " << translators_.size();
+  LOG(INFO) << "num translators: " << translators_.size();
 }
 
 }  // namespace rime

@@ -38,7 +38,7 @@ AbcSegmentor::AbcSegmentor(const Ticket& ticket)
 
 bool AbcSegmentor::Proceed(Segmentation* segmentation) {
   const string& input(segmentation->input());
-  DLOG(INFO) << "abc_segmentor: " << input;
+  LOG(INFO) << "abc_segmentor: " << input;
   size_t j = segmentation->GetCurrentStartPosition();
   size_t k = j;
   bool expecting_an_initial = true;
@@ -56,7 +56,7 @@ bool AbcSegmentor::Proceed(Segmentation* segmentation) {
     // for the next character.
     expecting_an_initial = is_final || is_delimiter;
   }
-  DLOG(INFO) << "[" << j << ", " << k << ")";
+  LOG(INFO) << "[" << j << ", " << k << ")";
   if (j < k) {
     Segment segment(j, k);
     segment.tags.insert("abc");

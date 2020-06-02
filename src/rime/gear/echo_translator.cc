@@ -33,7 +33,7 @@ EchoTranslator::EchoTranslator(const Ticket& ticket)
 
 an<Translation> EchoTranslator::Query(const string& input,
                                       const Segment& segment) {
-  DLOG(INFO) << "input = '" << input
+  LOG(INFO) << "input = '" << input
              << "', [" << segment.start << ", " << segment.end << ")";
   auto candidate = New<SimpleCandidate>("raw",
                                         segment.start,

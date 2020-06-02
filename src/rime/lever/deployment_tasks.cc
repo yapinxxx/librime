@@ -631,7 +631,7 @@ bool CleanOldLogFiles::Run(Deployer* deployer) {
   time_t now = time(NULL);
   strftime(ymd, sizeof(ymd), ".%Y%m%d", localtime(&now));
   string today(ymd);
-  DLOG(INFO) << "today: " << today;
+  LOG(INFO) << "today: " << today;
 
   vector<string> dirs;
 #ifdef RIME_ENABLE_LOGGING
@@ -644,12 +644,12 @@ bool CleanOldLogFiles::Run(Deployer* deployer) {
   google::GetExistingTempDirectories(&dirs);
 #endif  // _WIN32
 #endif  // RIME_ENABLE_LOGGING
-  DLOG(INFO) << "scanning " << dirs.size() << " temp directory for log files.";
+  LOG(INFO) << "scanning " << dirs.size() << " temp directory for log files.";
 
   bool success = true;
   int removed = 0;
   for (auto i = dirs.cbegin(); i != dirs.cend(); ++i) {
-    DLOG(INFO) << "temp directory: " << *i;
+    LOG(INFO) << "temp directory: " << *i;
     for (fs::directory_iterator j(*i), end; j != end; ++j) {
       fs::path entry(j->path());
       string file_name(entry.filename().string());
@@ -658,7 +658,7 @@ bool CleanOldLogFiles::Run(Deployer* deployer) {
             !fs::is_symlink(entry) &&
             boost::starts_with(file_name, "rime.") &&
             !boost::contains(file_name, today)) {
-          DLOG(INFO) << "removing log file '" << file_name << "'.";
+          LOG(INFO) << "removing log file '" << file_name << "'.";
           fs::remove(entry);
           ++removed;
         }

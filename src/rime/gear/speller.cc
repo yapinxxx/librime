@@ -107,22 +107,22 @@ ProcessResult Speller::ProcessKeyEvent(const KeyEvent& key_event) {
   }
   // handles input beyond max_code_length when auto_select is false.
   if (is_initial && AutoSelectAtMaxCodeLength(ctx)) {
-    DLOG(INFO) << "auto-select at max code length.";
+    LOG(INFO) << "auto-select at max code length.";
   }
   else if ((auto_clear_ == kClearMaxLength || auto_clear_ == kClearManual) && AutoClear(ctx)) {
-    DLOG(INFO) << "auto-clear at max code when no candidate.";
+    LOG(INFO) << "auto-clear at max code when no candidate.";
   }
   // make a backup of previous conversion before modifying input
   Segment previous_segment;
   if (auto_select_ && ctx->HasMenu()) {
     previous_segment = ctx->composition().back();
   }
-  DLOG(INFO) << "add to input: '" << (char)ch << "', " << key_event.repr();
+  LOG(INFO) << "add to input: '" << (char)ch << "', " << key_event.repr();
   ctx->PushInput(ch);
   ctx->ConfirmPreviousSelection();  // so that next BackSpace won't revert
                                     // previous selection
   if (AutoSelectPreviousMatch(ctx, &previous_segment)) {
-    DLOG(INFO) << "auto-select previous match.";
+    LOG(INFO) << "auto-select previous match.";
     // after auto-selecting, if only the current non-initial key is left,
     // then it should be handled by other processors.
     if (!is_initial && ctx->composition().GetCurrentSegmentLength() == 1) {
@@ -131,10 +131,10 @@ ProcessResult Speller::ProcessKeyEvent(const KeyEvent& key_event) {
     }
   }
   if (AutoSelectUniqueCandidate(ctx)) {
-    DLOG(INFO) << "auto-select unique candidate.";
+    LOG(INFO) << "auto-select unique candidate.";
   }
   else if (auto_clear_ == kClearAuto && AutoClear(ctx)) {
-    DLOG(INFO) << "auto-clear when no candidate.";
+    LOG(INFO) << "auto-clear when no candidate.";
   }
   return kAccepted;
 }

@@ -82,7 +82,7 @@ an<DictEntry> DictEntryIterator::Peek() {
     // get next entry from current chunk
     const auto& chunk(chunks_[chunk_index_]);
     const auto& e(chunk.entries[chunk.cursor]);
-    DLOG(INFO) << "creating temporary dict entry '"
+    LOG(INFO) << "creating temporary dict entry '"
                << table_->GetEntryText(e) << "'.";
     entry_ = New<DictEntry>();
     entry_->code = chunk.code;
@@ -194,7 +194,7 @@ size_t Dictionary::LookupWords(DictEntryIterator* result,
                                const string& str_code,
                                bool predictive,
                                size_t expand_search_limit) {
-  DLOG(INFO) << "lookup: " << str_code;
+  LOG(INFO) << "lookup: " << str_code;
   if (!loaded())
     return 0;
   vector<Prism::Match> keys;
@@ -207,7 +207,7 @@ size_t Dictionary::LookupWords(DictEntryIterator* result,
       keys.push_back(match);
     }
   }
-  DLOG(INFO) << "found " << keys.size() << " matching keys thru the prism.";
+  LOG(INFO) << "found " << keys.size() << " matching keys thru the prism.";
   size_t code_length(str_code.length());
   for (auto& match : keys) {
     SpellingAccessor accessor(prism_->QuerySpelling(match.value));
@@ -224,7 +224,7 @@ size_t Dictionary::LookupWords(DictEntryIterator* result,
       }
       TableAccessor a(table_->QueryWords(syllable_id));
       if (!a.exhausted()) {
-        DLOG(INFO) << "remaining code: " << remaining_code;
+        LOG(INFO) << "remaining code: " << remaining_code;
         result->AddChunk({a, remaining_code}, table_.get());
       }
     }

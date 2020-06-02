@@ -61,52 +61,52 @@ bool Config::IsMap(const string& path) {
 }
 
 bool Config::GetBool(const string& path, bool* value) {
-  DLOG(INFO) << "read: " << path;
+  LOG(INFO) << "read: " << path;
   auto p = As<ConfigValue>(data_->Traverse(path));
   return p && p->GetBool(value);
 }
 
 bool Config::GetInt(const string& path, int* value) {
-  DLOG(INFO) << "read: " << path;
+  LOG(INFO) << "read: " << path;
   auto p = As<ConfigValue>(data_->Traverse(path));
   return p && p->GetInt(value);
 }
 
 bool Config::GetDouble(const string& path, double* value) {
-  DLOG(INFO) << "read: " << path;
+  LOG(INFO) << "read: " << path;
   auto p = As<ConfigValue>(data_->Traverse(path));
   return p && p->GetDouble(value);
 }
 
 bool Config::GetString(const string& path, string* value) {
-  DLOG(INFO) << "read: " << path;
+  LOG(INFO) << "read: " << path;
   auto p = As<ConfigValue>(data_->Traverse(path));
   return p && p->GetString(value);
 }
 
 size_t Config::GetListSize(const string& path) {
-  DLOG(INFO) << "read: " << path;
+  LOG(INFO) << "read: " << path;
   auto list = GetList(path);
   return list ? list->size() : 0;
 }
 
 an<ConfigItem> Config::GetItem(const string& path) {
-  DLOG(INFO) << "read: " << path;
+  LOG(INFO) << "read: " << path;
   return data_->Traverse(path);
 }
 
 an<ConfigValue> Config::GetValue(const string& path) {
-  DLOG(INFO) << "read: " << path;
+  LOG(INFO) << "read: " << path;
   return As<ConfigValue>(data_->Traverse(path));
 }
 
 an<ConfigList> Config::GetList(const string& path) {
-  DLOG(INFO) << "read: " << path;
+  LOG(INFO) << "read: " << path;
   return As<ConfigList>(data_->Traverse(path));
 }
 
 an<ConfigMap> Config::GetMap(const string& path) {
-  DLOG(INFO) << "read: " << path;
+  LOG(INFO) << "read: " << path;
   return As<ConfigMap>(data_->Traverse(path));
 }
 

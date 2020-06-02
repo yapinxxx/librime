@@ -25,7 +25,7 @@ bool Matcher::Proceed(Segmentation* segmentation) {
     return true;
   auto match = patterns_.GetMatch(segmentation->input(), *segmentation);
   if (match.found()) {
-    DLOG(INFO) << "match: " << match.tag
+    LOG(INFO) << "match: " << match.tag
                << " [" << match.start << ", " << match.end << ")";
     while (segmentation->GetCurrentStartPosition() > match.start)
       segmentation->pop_back();

@@ -210,7 +210,7 @@ bool TableEncoder::Encode(const RawCode& code, string* result) {
 // may return a negative number if `index` does not exist in `code`.
 int TableEncoder::CalculateCodeIndex(const string& code, int index,
                                      int start) {
-  DLOG(INFO) << "code = " << code
+  LOG(INFO) << "code = " << code
              << ", index = " << index << ", start = " << start;
   // tail_anchor = '|'
   const int n = static_cast<int>(code.length());
@@ -264,13 +264,13 @@ bool TableEncoder::DfsEncode(const string& phrase,
     }
     string encoded;
     if (Encode(*code, &encoded)) {
-      DLOG(INFO) << "encode '" << phrase << "': "
+      LOG(INFO) << "encode '" << phrase << "': "
                  << "[" << code->ToString() << "] -> [" << encoded << "]";
       collector_->CreateEntry(phrase, encoded, value);
       return true;
     }
     else {
-      DLOG(WARNING) << "failed to encode '" << phrase << "': "
+      LOG(WARNING) << "failed to encode '" << phrase << "': "
                     << "[" << code->ToString() << "]";
       return false;
     }

@@ -19,7 +19,7 @@ Menu::Menu()
 
 void Menu::AddTranslation(an<Translation> translation) {
   *merged_ += translation;
-  DLOG(INFO) << merged_->size() << " translations added.";
+  LOG(INFO) << merged_->size() << " translations added.";
 }
 
 void Menu::AddFilter(Filter* filter) {
@@ -27,7 +27,7 @@ void Menu::AddFilter(Filter* filter) {
 }
 
 size_t Menu::Prepare(size_t requested) {
-  DLOG(INFO) << "preparing " << requested << " candidates.";
+  LOG(INFO) << "preparing " << requested << " candidates.";
   while (candidates_.size() < requested && !result_->exhausted()) {
     if (auto cand = result_->Peek()) {
       candidates_.push_back(cand);

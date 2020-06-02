@@ -274,7 +274,7 @@ void SwitchTranslation::LoadSwitches(Switcher* switcher) {
       Append(folded_options);
     }
   }
-  DLOG(INFO) << "num switches: " << candies_.size();
+  LOG(INFO) << "num switches: " << candies_.size();
 }
 
 SwitchTranslator::SwitchTranslator(const Ticket& ticket)

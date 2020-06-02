@@ -42,7 +42,7 @@ RecognizerPatterns::GetMatch(const string& input,
   size_t j = segmentation.GetCurrentEndPosition();
   size_t k = segmentation.GetConfirmedPosition();
   string active_input = input.substr(k);
-  DLOG(INFO) << "matching active input '" << active_input << "' at pos " << k;
+  LOG(INFO) << "matching active input '" << active_input << "' at pos " << k;
   for (const auto& v : *this) {
     boost::smatch m;
     if (boost::regex_search(active_input, m, v.second)) {
@@ -51,7 +51,7 @@ RecognizerPatterns::GetMatch(const string& input,
       if (end != input.length())
         continue;
       if (start == j) {
-        DLOG(INFO) << "input [" << start << ", " << end << ") '"
+        LOG(INFO) << "input [" << start << ", " << end << ") '"
                    << m.str() << "' matches pattern: " << v.first;
         return {v.first, start, end};
       }
@@ -59,7 +59,7 @@ RecognizerPatterns::GetMatch(const string& input,
         if (start < seg.start)
           break;
         if (start == seg.start) {
-          DLOG(INFO) << "input [" << start << ", " << end << ") '"
+          LOG(INFO) << "input [" << start << ", " << end << ") '"
                      << m.str() << "' matches pattern: " << v.first;
           return {v.first, start, end};
         }
