@@ -113,7 +113,7 @@ ProcessResult AsciiComposer::ProcessKeyEvent(const KeyEvent& key_event) {
   }
   Context* ctx = engine_->context();
   bool ascii_mode = ctx->get_option("ascii_mode");
-  bool kauki(){
+  bool kiamtsa_kauki(){
     time_t chitma = time(nullptr);
       struct tm tm1;
       tm1.tm_hour = 23;
@@ -128,7 +128,8 @@ ProcessResult AsciiComposer::ProcessKeyEvent(const KeyEvent& key_event) {
       }
       return false;
   }
-  if (ascii_mode || kauki()) {
+  bool kauki = kiamtsa_kauki();
+  if (ascii_mode || kauki) {
     if (!ctx->IsComposing()) {
       return kRejected;  // direct commit
     }
