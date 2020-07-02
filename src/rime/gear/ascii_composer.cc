@@ -113,6 +113,7 @@ ProcessResult AsciiComposer::ProcessKeyEvent(const KeyEvent& key_event) {
   }
   Context* ctx = engine_->context();
   bool ascii_mode = ctx->get_option("ascii_mode");
+  bool kiamtsa_kauki();
   bool kauki = kiamtsa_kauki();
   if (ascii_mode || kauki) {
     if (!ctx->IsComposing()) {
