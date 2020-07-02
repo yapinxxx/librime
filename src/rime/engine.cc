@@ -113,7 +113,7 @@ bool ConcreteEngine::ProcessKey(const KeyEvent& key_event) {
   }
   // notify interested parties
   context_->unhandled_key_notifier()(context_.get(), key_event);
-  return false;
+  return true;
 }
 
 void ConcreteEngine::OnContextUpdate(Context* ctx) {
