@@ -113,7 +113,22 @@ ProcessResult AsciiComposer::ProcessKeyEvent(const KeyEvent& key_event) {
   }
   Context* ctx = engine_->context();
   bool ascii_mode = ctx->get_option("ascii_mode");
-  bool kiamtsa_kauki(){
+  bool kiamtsa_kauki();
+  bool kauki = kiamtsa_kauki();
+  if (ascii_mode || kauki) {
+    if (!ctx->IsComposing()) {
+      return kRejected;  // direct commit
+    }
+    // edit inline ascii string
+    if (!key_event.release() && ch >= 0x20 && ch < 0x80) {
+      ctx->PushInput(ch);
+      return kAccepted;
+    }
+  }
+  return kNoop;
+}
+
+bool kiamtsa_kauki() {
     time_t chitma = time(nullptr);
       struct tm tm1;
       tm1.tm_hour = 23;
@@ -128,19 +143,6 @@ ProcessResult AsciiComposer::ProcessKeyEvent(const KeyEvent& key_event) {
       }
       return false;
   }
-  bool kauki = kiamtsa_kauki();
-  if (ascii_mode || kauki) {
-    if (!ctx->IsComposing()) {
-      return kRejected;  // direct commit
-    }
-    // edit inline ascii string
-    if (!key_event.release() && ch >= 0x20 && ch < 0x80) {
-      ctx->PushInput(ch);
-      return kAccepted;
-    }
-  }
-  return kNoop;
-}
 
 ProcessResult AsciiComposer::ProcessCapsLock(const KeyEvent& key_event) {
   int ch = key_event.keycode();
