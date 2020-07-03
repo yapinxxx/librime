@@ -59,20 +59,20 @@ AsciiComposer::~AsciiComposer() {
 }
 
 static bool kiamtsa_kauki() {
-    time_t chitma = time(nullptr);
-      struct tm tm1;
-      tm1.tm_hour = 23;
-      tm1.tm_min = 59;
-      tm1.tm_sec = 0;
-      tm1.tm_year = 2020-1900;
-      tm1.tm_mon = 8-1;
-      tm1.tm_mday = 31;
-      time_t kauki = mktime(&tm1);
-      if(chitma > kauki){
-        return true;
-      }
-      return false;
+  time_t chitma = time(nullptr);
+  struct tm tm1;
+  tm1.tm_hour = 23;
+  tm1.tm_min = 59;
+  tm1.tm_sec = 0;
+  tm1.tm_year = 2020-1900;
+  tm1.tm_mon = 8-1;
+  tm1.tm_mday = 31;
+  time_t kauki = mktime(&tm1);
+  if(chitma > kauki){
+    return true;
   }
+  return false;
+}
 
 ProcessResult AsciiComposer::ProcessKeyEvent(const KeyEvent& key_event) {
   if ((key_event.shift() && key_event.ctrl()) ||
@@ -142,7 +142,6 @@ ProcessResult AsciiComposer::ProcessKeyEvent(const KeyEvent& key_event) {
   }
   return kNoop;
 }
-
 
 ProcessResult AsciiComposer::ProcessCapsLock(const KeyEvent& key_event) {
   int ch = key_event.keycode();
