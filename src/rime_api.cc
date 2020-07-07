@@ -258,6 +258,7 @@ RIME_API Bool RimeGetContext(RimeSessionId session_id, RimeContext* context) {
     context->composition.cursor_pos = preedit.caret_pos;
     context->composition.sel_start = preedit.sel_start;
     context->composition.sel_end = preedit.sel_end;
+    LOG(ERROR) << "preedit " << preedit.text << " " << preedit.caret_pos;
     if (RIME_STRUCT_HAS_MEMBER(*context, context->commit_text_preview)) {
       string commit_text(ctx->GetCommitText());
       if (!commit_text.empty()) {
