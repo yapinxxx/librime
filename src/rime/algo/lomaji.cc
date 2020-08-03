@@ -82,6 +82,7 @@ bool ThauKamLomaji(const std::string& text) {
 // Sentence
 bool KamAiLianJiHu(const std::string& ting_text,
                     const std::string& tsit_text) {
+  return false;
   if (ting_text.empty() || ting_text == " ") {
     return false;
   }
