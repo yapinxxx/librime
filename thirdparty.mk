@@ -31,6 +31,16 @@ glog:
 	-DWITH_GFLAGS:BOOL=OFF \
 	-DCMAKE_BUILD_TYPE:STRING="Release" \
 	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
+	$(CMAKE_OSX_ARCHS) \
+	&& cmake --build $(build) --target install
+
+gtest:
+	cd $(SRC_DIR)/googletest; \
+	cmake . -B$(build) \
+	-DBUILD_GMOCK:BOOL=OFF \
+	-DCMAKE_BUILD_TYPE:STRING="Release" \
+	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
+	$(CMAKE_OSX_ARCHS) \
 	&& cmake --build $(build) --target install
 
 leveldb:
@@ -40,14 +50,25 @@ leveldb:
 	-DLEVELDB_BUILD_TESTS:BOOL=OFF \
 	-DCMAKE_BUILD_TYPE:STRING="Release" \
 	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
-	&& cmake --build build --target install
+	$(CMAKE_OSX_ARCHS) \
+	&& cmake --build $(build) --target install
 
 marisa:
 	cd $(SRC_DIR)/marisa-trie; \
-	cmake $(SRC_DIR) -Bbuild \
+	cmake $(SRC_DIR) -B$(build) \
 	-DCMAKE_BUILD_TYPE:STRING="Release" \
 	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
-	&& cmake --build build --target install
+	$(CMAKE_OSX_ARCHS) \
+	&& cmake --build $(build) --target install
+
+opencc:
+	cd $(SRC_DIR)/opencc; \
+	cmake . -B$(build) \
+	-DBUILD_SHARED_LIBS:BOOL=OFF \
+	-DCMAKE_BUILD_TYPE:STRING="Release" \
+	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
+	$(CMAKE_OSX_ARCHS) \
+	&& cmake --build $(build) --target install
 
 yaml-cpp:
 	cd $(SRC_DIR)/yaml-cpp; \
@@ -57,12 +78,5 @@ yaml-cpp:
 	-DYAML_CPP_BUILD_TOOLS:BOOL=OFF \
 	-DCMAKE_BUILD_TYPE:STRING="Release" \
 	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
-	&& cmake --build build --target install
-
-gtest:
-	cd $(SRC_DIR)/googletest; \
-	cmake . -B$(build) \
-	-DBUILD_GMOCK:BOOL=OFF \
-	-DCMAKE_BUILD_TYPE:STRING="Release" \
-	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
+	$(CMAKE_OSX_ARCHS) \
 	&& cmake --build $(build) --target install
