@@ -1,20 +1,16 @@
 # a minimal build of third party libraries for static linking
 
-THIRD_PARTY_DIR = $(CURDIR)/thirdparty
-SRC_DIR = $(THIRD_PARTY_DIR)/src
-INCLUDE_DIR = $(THIRD_PARTY_DIR)/include
-LIB_DIR = $(THIRD_PARTY_DIR)/lib
-BIN_DIR = $(THIRD_PARTY_DIR)/bin
-SHARE_DIR = $(THIRD_PARTY_DIR)/share
+third_party_dir = $(CURDIR)/thirdparty
+src_dir = $(third_party_dir)/src
 
-build = build
-glog: build = cmake-build
+glog: build ?= cmake-build
+build ?= build
 
-THIRD_PARTY_LIBS = glog leveldb marisa yaml-cpp gtest
+third_party_libs = glog gtest leveldb marisa yaml-cpp
 
-.PHONY: all clean-src $(THIRD_PARTY_LIBS)
+.PHONY: all clean-src $(third_party_libs)
 
-all: $(THIRD_PARTY_LIBS)
+all: $(third_party_libs)
 
 # note: this won't clean output files under include/, lib/ and bin/.
 clean-src:
@@ -25,52 +21,44 @@ clean-src:
 	rm -r $(SRC_DIR)/yaml-cpp/build || true
 
 glog:
-	cd $(SRC_DIR)/glog; \
+	cd $(src_dir)/glog; \
 	cmake . -B$(build) \
 	-DBUILD_TESTING:BOOL=OFF \
 	-DWITH_GFLAGS:BOOL=OFF \
 	-DCMAKE_BUILD_TYPE:STRING="Release" \
-	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
+	-DCMAKE_INSTALL_PREFIX:PATH="$(third_party_dir)" \
 	&& cmake --build $(build) --target install
 
 gtest:
-	cd $(SRC_DIR)/googletest; \
+	cd $(src_dir)/googletest; \
 	cmake . -B$(build) \
 	-DBUILD_GMOCK:BOOL=OFF \
 	-DCMAKE_BUILD_TYPE:STRING="Release" \
-	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
+	-DCMAKE_INSTALL_PREFIX:PATH="$(third_party_dir)" \
 	&& cmake --build $(build) --target install
 
 leveldb:
-	cd $(SRC_DIR)/leveldb; \
-	cmake . -Bbuild \
+	cd $(src_dir)/leveldb; \
+	cmake . -B$(build) \
 	-DLEVELDB_BUILD_BENCHMARKS:BOOL=OFF \
 	-DLEVELDB_BUILD_TESTS:BOOL=OFF \
 	-DCMAKE_BUILD_TYPE:STRING="Release" \
-	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
+	-DCMAKE_INSTALL_PREFIX:PATH="$(third_party_dir)" \
 	&& cmake --build $(build) --target install
 
 marisa:
-	cd $(SRC_DIR)/marisa-trie; \
-	cmake $(SRC_DIR) -B$(build) \
+	cd $(src_dir)/marisa-trie; \
+	cmake $(src_dir) -B$(build) \
 	-DCMAKE_BUILD_TYPE:STRING="Release" \
-	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
-	&& cmake --build $(build) --target install
-
-opencc:
-	cd $(SRC_DIR)/opencc; \
-	cmake . -B$(build) \
-	-DBUILD_SHARED_LIBS:BOOL=OFF \
-	-DCMAKE_BUILD_TYPE:STRING="Release" \
-	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
+	-DCMAKE_INSTALL_PREFIX:PATH="$(third_party_dir)" \
 	&& cmake --build $(build) --target install
 
 yaml-cpp:
-	cd $(SRC_DIR)/yaml-cpp; \
-	cmake . -Bbuild \
+	cd $(src_dir)/yaml-cpp; \
+	cmake . -B$(build) \
 	-DYAML_CPP_BUILD_CONTRIB:BOOL=OFF \
 	-DYAML_CPP_BUILD_TESTS:BOOL=OFF \
 	-DYAML_CPP_BUILD_TOOLS:BOOL=OFF \
 	-DCMAKE_BUILD_TYPE:STRING="Release" \
-	-DCMAKE_INSTALL_PREFIX:PATH="$(THIRD_PARTY_DIR)" \
+	-DCMAKE_INSTALL_PREFIX:PATH="$(third_party_dir)" \
 	&& cmake --build $(build) --target install
