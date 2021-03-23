@@ -115,6 +115,7 @@ class ScriptTranslation : public Translation {
     set_exhausted(true);
   }
   bool Evaluate(Dictionary* dict, UserDictionary* user_dict);
+  bool SiChoanLoSu(const string& cand_text, const string& spelling);
   virtual bool Next();
   virtual an<Candidate> Peek();
 
@@ -213,7 +214,7 @@ string ScriptTranslator::Spell(const Code& code) {
   if (!dict_ || !dict_->Decode(code, &syllables) || syllables.empty())
     return result;
   result =  boost::algorithm::join(syllables,
-                                   string(1, delimiters_.at(0)));
+                                   "-");
   comment_formatter_.Apply(&result);
   return result;
 }
@@ -437,6 +438,26 @@ bool ScriptTranslation::IsNormalSpelling() const {
       (syllable_graph.vertices.rbegin()->second == kNormalSpelling);
 }
 
+bool ScriptTranslation::SiChoanLoSu(
+  const string& cand_text, const string& spelling) {
+  bool penn_tng = (cand_text.length() == spelling.length()) ? true: false;
+
+  if(penn_tng) {
+    size_t text_len = cand_text.length();
+    for(size_t ui = 0; ui <= text_len; ui++) {
+      if(cand_text[ui] == '-' && spelling[ui] == ' ') {
+        continue;
+      }
+      else if(cand_text[ui] != spelling[ui]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  return false;
+}
+
 an<Candidate> ScriptTranslation::Peek() {
   PrepareCandidate();
   if (!candidate_) {
@@ -445,9 +466,10 @@ an<Candidate> ScriptTranslation::Peek() {
   if (candidate_->preedit().empty()) {
     candidate_->set_preedit(syllabifier_->GetPreeditString(*candidate_));
   }
-  if (candidate_->comment().empty()) {
+  if (candidate_->comment().empty() && candidate_->type() != "sentence") {
     auto spelling = syllabifier_->GetOriginalSpelling(*candidate_);
-    if (!spelling.empty() && spelling != candidate_->preedit()) {
+    bool sichoanlosu = SiChoanLoSu(candidate_->text(), spelling);
+    if (!spelling.empty() && !sichoanlosu) {
       candidate_->set_comment(/*quote_left + */spelling/* + quote_right*/);
     }
   }
@@ -463,14 +485,6 @@ void ScriptTranslation::PrepareCandidate() {
   if (sentence_) {
     if (sentence_->preedit().empty()) {
       sentence_->set_preedit(syllabifier_->GetPreeditString(*sentence_));
-    }
-    if (sentence_->comment().empty()) {
-      auto spelling = syllabifier_->GetOriginalSpelling(*sentence_);
-      if (!spelling.empty() &&
-          (translator_->always_show_comments() ||
-              spelling != sentence_->preedit())) {
-        sentence_->set_comment(/*quote_left + */spelling/* + quote_right*/);
-      }
     }
     candidate_ = sentence_;
     return;
