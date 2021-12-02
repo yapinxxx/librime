@@ -6,7 +6,6 @@
 //
 #include <algorithm>
 #include <boost/range/adaptor/reversed.hpp>
-#include <rime/algo/lomaji.h>
 #include <rime/config.h>
 #include <rime/schema.h>
 #include <rime/ticket.h>
@@ -94,7 +93,7 @@ void Sentence::Extend(const DictEntry& another,
                       double new_weight) {
   entry_->weight = new_weight;
   if(KamAiLianJiHu(entry_->text, another.text)) {
-    entry_->text.append(LianJiHu);
+    entry_->text.append(lianjihu);
   }
   entry_->text.append(another.text);
   entry_->code.insert(entry_->code.end(),

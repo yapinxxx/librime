@@ -1,4 +1,5 @@
 #include <boost/algorithm/string/predicate.hpp>
+#include <rime/algo/lomaji.h>
 
 namespace rime {
 
@@ -31,6 +32,16 @@ bool ThauKamLomaji(const std::string& text) {
   return isalpha(text.front());
 }
 
+Lomaji::Lomaji()
+{
+  // static bool use_space_ = false;
+  lianjihu = "-";
+  if (Config* config = engine_->schema()->config()) {
+    config->GetString("speller/lianjihu", &lianjihu);
+    // config->GetBool("speller/use_space", &use_space_);
+  }
+}
+
 // Sentence
 bool Lomaji::KamAiLianJiHu(const std::string& ting_text,
                     const std::string& tsit_text) const {
@@ -45,13 +56,6 @@ bool Lomaji::KamAiLianJiHu(const std::string& ting_text,
   phuann = ting_kam_lomaji && tsit_kam_lomaji;
 
   return phuann;
-}
-
-// static bool use_space_ = false;
-Lomaji::LianJiHu = "-";
-if (Config* config = engine_->schema()->config()) {
-  config->GetString("speller/lianjihu", &Lomaji::LianJiHu);
-  // config->GetBool("speller/use_space", &use_space_);
 }
 
 }
