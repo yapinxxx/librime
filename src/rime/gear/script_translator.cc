@@ -17,7 +17,6 @@
 #include <rime/engine.h>
 #include <rime/schema.h>
 #include <rime/translation.h>
-#include <rime/algo/lomaji.h>
 #include <rime/algo/syllabifier.h>
 #include <rime/dict/corrector.h>
 #include <rime/dict/dictionary.h>

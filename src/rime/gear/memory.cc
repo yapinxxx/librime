@@ -12,7 +12,6 @@
 #include <rime/language.h>
 #include <rime/schema.h>
 #include <rime/ticket.h>
-#include <rime/algo/lomaji.h>
 #include <rime/dict/dictionary.h>
 #include <rime/dict/user_dictionary.h>
 #include <rime/gear/memory.h>

@@ -11,6 +11,7 @@
 #include <rime/translation.h>
 #include <rime/translator.h>
 #include <rime/algo/algebra.h>
+#include <rime/algo/lomaji.h>
 #include <rime/gear/memory.h>
 #include <rime/gear/translator_commons.h>
 
@@ -27,7 +28,8 @@ struct SyllableGraph;
 
 class ScriptTranslator : public Translator,
                          public Memory,
-                         public TranslatorOptions {
+                         public TranslatorOptions,
+                         public Lomaji {
  public:
   ScriptTranslator(const Ticket& ticket);
 

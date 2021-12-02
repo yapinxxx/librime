@@ -3,10 +3,13 @@
 
 namespace rime {
 
-bool KamAiLianJiHu(const std::string& ting_text,
-                   const std::string& tsit_text);
+class Lomaji {
+protected:
+    bool KamAiLianJiHu(const std::string& ting_text,
+                       const std::string& tsit_text) const;
 
-std::string LianJiHu;
+    static std::string LianJiHu;
+};
 
 } // end namespace
 

@@ -8,6 +8,7 @@
 #define RIME_MEMORY_H_
 
 #include <rime/common.h>
+#include <rime/algo/lomaji.h>
 #include <rime/dict/vocabulary.h>
 
 namespace rime {
@@ -21,7 +22,7 @@ class Language;
 class Phrase;
 class Memory;
 
-struct CommitEntry : DictEntry {
+struct CommitEntry : DictEntry, Lomaji {
   vector<const DictEntry*> elements;
   Memory* memory;
 

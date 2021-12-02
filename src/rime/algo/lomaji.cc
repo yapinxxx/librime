@@ -32,8 +32,8 @@ bool ThauKamLomaji(const std::string& text) {
 }
 
 // Sentence
-bool KamAiLianJiHu(const std::string& ting_text,
-                    const std::string& tsit_text) {
+bool Lomaji::KamAiLianJiHu(const std::string& ting_text,
+                    const std::string& tsit_text) const {
   if (ting_text.empty() || ting_text == " ") {
     return false;
   }
@@ -48,9 +48,9 @@ bool KamAiLianJiHu(const std::string& ting_text,
 }
 
 // static bool use_space_ = false;
-std::string LianJiHu = "-";
+Lomaji::LianJiHu = "-";
 if (Config* config = engine_->schema()->config()) {
-  config->GetString("speller/lianjihu", &LianJiHu);
+  config->GetString("speller/lianjihu", &Lomaji::LianJiHu);
   // config->GetBool("speller/use_space", &use_space_);
 }
 

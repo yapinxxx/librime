@@ -13,6 +13,7 @@
 #include <rime/candidate.h>
 #include <rime/translation.h>
 #include <rime/algo/algebra.h>
+#include <rime/algo/lomaji.h>
 #include <rime/algo/syllabifier.h>
 #include <rime/dict/vocabulary.h>
 
@@ -109,7 +110,7 @@ class Phrase : public Candidate {
 
 //
 
-class Sentence : public Phrase {
+class Sentence : public Phrase, public Lomaji {
  public:
   Sentence(const Language* language)
       : Phrase(language, "sentence", 0, 0, New<DictEntry>()) {}
