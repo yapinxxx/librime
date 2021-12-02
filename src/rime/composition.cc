@@ -114,7 +114,7 @@ string Composition::GetCommitText() const {
     if (auto cand = seg.GetSelectedCandidate()) {
       end = cand->end();
       if(KamAiLianJiHu(result, cand->text())) {
-        result += " ";
+        result += LianJiHu;
       }
       result += cand->text();
     }

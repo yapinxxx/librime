@@ -17,6 +17,7 @@
 #include <rime/engine.h>
 #include <rime/schema.h>
 #include <rime/translation.h>
+#include <rime/algo/lomaji.h>
 #include <rime/algo/syllabifier.h>
 #include <rime/dict/corrector.h>
 #include <rime/dict/dictionary.h>
@@ -214,7 +215,7 @@ string ScriptTranslator::Spell(const Code& code) {
   if (!dict_ || !dict_->Decode(code, &syllables) || syllables.empty())
     return result;
   result =  boost::algorithm::join(syllables,
-                                   " ");
+                                   LianJiHu);
   comment_formatter_.Apply(&result);
   return result;
 }

@@ -6,7 +6,7 @@ namespace rime {
 bool KamAiLianJiHu(const std::string& ting_text,
                    const std::string& tsit_text);
 
-string LianJiHu;
+std::string LianJiHu;
 
 } // end namespace
 
