@@ -47,4 +47,11 @@ bool KamAiLianJiHu(const std::string& ting_text,
   return phuann;
 }
 
+// static bool use_space_ = false;
+string LianJiHu = "-";
+if (Config* config = engine_->schema()->config()) {
+  config->GetString("speller/lianjihu", &LianJiHu);
+  // config->GetBool("speller/use_space", &use_space_);
+}
+
 }
