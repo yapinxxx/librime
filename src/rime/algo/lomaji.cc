@@ -1,5 +1,6 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <rime/algo/lomaji.h>
+#include <rime/config.h>
 
 namespace rime {
 
