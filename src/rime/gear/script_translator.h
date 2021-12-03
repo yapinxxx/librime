@@ -43,6 +43,7 @@ class ScriptTranslator : public Translator,
   int max_homophones() const { return max_homophones_; }
   int spelling_hints() const { return spelling_hints_; }
   bool always_show_comments() const { return always_show_comments_; }
+  bool sutsoo_lomaji() const { return sutsoo_lomaji_; }
 
  protected:
   int max_homophones_ = 1;
