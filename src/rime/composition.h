@@ -8,7 +8,6 @@
 #define RIME_COMPOSITION_H_
 
 #include <rime/segmentation.h>
-#include <rime/algo/lomaji.h>
 
 namespace rime {
 
@@ -19,7 +18,7 @@ struct Preedit {
   size_t sel_end = 0;
 };
 
-class Composition : public Segmentation, public Lomaji {
+class Composition : public Segmentation {
  public:
   Composition() = default;
 

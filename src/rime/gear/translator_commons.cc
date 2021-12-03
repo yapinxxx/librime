@@ -9,6 +9,7 @@
 #include <rime/config.h>
 #include <rime/schema.h>
 #include <rime/ticket.h>
+#include <rime/algo/lomaji.h>
 #include <rime/gear/grammar.h>
 #include <rime/gear/translator_commons.h>
 

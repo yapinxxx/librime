@@ -28,8 +28,7 @@ struct SyllableGraph;
 
 class ScriptTranslator : public Translator,
                          public Memory,
-                         public TranslatorOptions,
-                         public Lomaji {
+                         public TranslatorOptions {
  public:
   ScriptTranslator(const Ticket& ticket);
 
