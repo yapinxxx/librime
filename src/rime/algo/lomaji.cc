@@ -33,15 +33,7 @@ bool ThauKamLomaji(const std::string& text) {
   return isalpha(text.front());
 }
 
-Lomaji::Lomaji()
-{
-  // static bool use_space_ = false;
-  lianjihu = "-";
-  // if (Config* config = engine_->schema()->config()) {
-  //   config->GetString("speller/lianjihu", &lianjihu);
-  //   // config->GetBool("speller/use_space", &use_space_);
-  // }
-}
+std::string Lomaji::lianjihu_ = "-";
 
 // Sentence
 bool Lomaji::KamAiLianJiHu(const std::string& ting_text,
@@ -57,6 +49,14 @@ bool Lomaji::KamAiLianJiHu(const std::string& ting_text,
   phuann = ting_kam_lomaji && tsit_kam_lomaji;
 
   return phuann;
+}
+
+void Lomaji::set_lianjihu(const std::string lianjihu) {
+  lianjihu_ = lianjihu;
+}
+
+std::string Lomaji::get_lianjihu() {
+  return lianjihu_;
 }
 
 }

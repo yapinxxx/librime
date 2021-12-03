@@ -9,7 +9,10 @@ class Lomaji {
         bool KamAiLianJiHu(const std::string& ting_text,
                            const std::string& tsit_text) const;
 
-        std::string lianjihu;
+        static std::string lianjihu_;
+    public:
+        static void set_lianjihu(const std::string lianjihu);
+        static std::string get_lianjihu();
 };
 
 } // end namespace
