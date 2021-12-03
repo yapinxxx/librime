@@ -4,14 +4,16 @@
 namespace rime {
 
 class Lomaji {
-    protected:
-        bool KamAiLianJiHu(const std::string& ting_text,
-                           const std::string& tsit_text) const;
-
-        static std::string lianjihu_;
     public:
-        static void set_lianjihu(const std::string lianjihu);
-        static std::string get_lianjihu();
+        static bool KamAiLianjihu(const std::string& ting_text,
+                           const std::string& tsit_text);
+        static void SetLianjihu(const std::string lianjihu);
+        static std::string GetLianjihu();
+    protected:
+        static std::string lianjihu_;
+    private:
+        static bool ThauKamLomaji(const std::string& text);
+        static bool BueKamLomaji(const std::string& text);
 };
 
 } // end namespace

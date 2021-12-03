@@ -39,8 +39,8 @@ Preedit Composition::GetPreedit(const string& full_input, size_t caret_pos,
     if (i < size() - 1) {  // converted
       if (cand) {
         end = cand->end();
-        if(KamAiLianJiHu(preedit.text, cand->text())){
-          preedit.text += get_lianjihu();
+        if(Lomaji::KamAiLianjihu(preedit.text, cand->text())){
+          preedit.text += Lomaji::GetLianjihu();
         }
         preedit.text += cand->text();
       }
@@ -112,8 +112,8 @@ string Composition::GetCommitText() const {
   for (const Segment& seg : *this) {
     if (auto cand = seg.GetSelectedCandidate()) {
       end = cand->end();
-      if(KamAiLianJiHu(result, cand->text())) {
-        result += get_lianjihu();
+      if(Lomaji::KamAiLianjihu(result, cand->text())) {
+        result += Lomaji::GetLianjihu();
       }
       result += cand->text();
     }

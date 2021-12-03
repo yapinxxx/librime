@@ -26,8 +26,8 @@ void CommitEntry::Clear() {
 }
 
 void CommitEntry::AppendPhrase(const an<Phrase>& phrase) {
-  if(KamAiLianJiHu(text, phrase->text())){
-    text += get_lianjihu();
+  if(Lomaji::KamAiLianjihu(text, phrase->text())){
+    text += Lomaji::GetLianjihu();
   }
   text += phrase->text();
   code.insert(code.end(),

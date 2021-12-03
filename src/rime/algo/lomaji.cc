@@ -4,7 +4,7 @@
 
 namespace rime {
 
-bool BueKamLomaji(const std::string& text) {
+bool Lomaji::BueKamLomaji(const std::string& text) {
   const std::string pi[] = {
     "ˊ", "ˋ", "ˇ", "^", "+",
   };
@@ -19,7 +19,7 @@ bool BueKamLomaji(const std::string& text) {
 }
 
 
-bool ThauKamLomaji(const std::string& text) {
+bool Lomaji::ThauKamLomaji(const std::string& text) {
   // const std::string pi[] = {
   //   "ˊ", "ˋ", "ˇ", "^", "+",
   // };
@@ -36,8 +36,8 @@ bool ThauKamLomaji(const std::string& text) {
 std::string Lomaji::lianjihu_ = "-";
 
 // Sentence
-bool Lomaji::KamAiLianJiHu(const std::string& ting_text,
-                    const std::string& tsit_text) const {
+bool Lomaji::KamAiLianjihu(const std::string& ting_text,
+                    const std::string& tsit_text) {
   if (ting_text.empty() || ting_text == " ") {
     return false;
   }
@@ -51,11 +51,11 @@ bool Lomaji::KamAiLianJiHu(const std::string& ting_text,
   return phuann;
 }
 
-void Lomaji::set_lianjihu(const std::string lianjihu) {
+void Lomaji::SetLianjihu(const std::string lianjihu) {
   lianjihu_ = lianjihu;
 }
 
-std::string Lomaji::get_lianjihu() {
+std::string Lomaji::GetLianjihu() {
   return lianjihu_;
 }
 

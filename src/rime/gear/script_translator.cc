@@ -214,7 +214,7 @@ string ScriptTranslator::Spell(const Code& code) {
   if (!dict_ || !dict_->Decode(code, &syllables) || syllables.empty())
     return result;
   result =  boost::algorithm::join(syllables,
-                                   get_lianjihu());
+                                   Lomaji::GetLianjihu());
   comment_formatter_.Apply(&result);
   return result;
 }
