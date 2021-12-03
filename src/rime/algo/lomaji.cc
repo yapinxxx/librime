@@ -37,10 +37,10 @@ Lomaji::Lomaji()
 {
   // static bool use_space_ = false;
   lianjihu = "-";
-  if (Config* config = engine_->schema()->config()) {
-    config->GetString("speller/lianjihu", &lianjihu);
-    // config->GetBool("speller/use_space", &use_space_);
-  }
+  // if (Config* config = engine_->schema()->config()) {
+  //   config->GetString("speller/lianjihu", &lianjihu);
+  //   // config->GetBool("speller/use_space", &use_space_);
+  // }
 }
 
 // Sentence
