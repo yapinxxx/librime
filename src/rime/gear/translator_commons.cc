@@ -93,7 +93,7 @@ void Sentence::Extend(const DictEntry& another,
                       double new_weight) {
   entry_->weight = new_weight;
   if(KamAiLianJiHu(entry_->text, another.text)) {
-    entry_->text.append(lianjihu);
+    entry_->text.append(get_lianjihu());
   }
   entry_->text.append(another.text);
   entry_->code.insert(entry_->code.end(),
