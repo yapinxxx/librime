@@ -1,8 +1,10 @@
 #include <boost/algorithm/string/predicate.hpp>
+#include <rime/algo/lomaji.h>
+#include <rime/config.h>
 
 namespace rime {
 
-bool BueKamLomaji(const std::string& text) {
+bool Lomaji::BueKamLomaji(const std::string& text) {
   const std::string pi[] = {
     "À", "Á", "Â", "Ă",
     "È", "É", "Ê", "Ĕ",
@@ -28,7 +30,8 @@ bool BueKamLomaji(const std::string& text) {
     "Ḿ", "ḿ",
     "̀", "̂", "̄", "̋", "̌", "◌̆",
     "̍", "͘",
-    "ⁿ"
+    "ⁿ",
+    "ˊ", "ˋ", "ˇ", "^", "+",
   };
   size_t len = sizeof(pi)/sizeof(pi[0]);
   for(size_t i=0; i< len; i++) {
@@ -41,8 +44,9 @@ bool BueKamLomaji(const std::string& text) {
 }
 
 
-bool ThauKamLomaji(const std::string& text) {
+bool Lomaji::ThauKamLomaji(const std::string& text) {
   const std::string pi[] = {
+
     "À", "Á", "Â", "Ă",
     "È", "É", "Ê", "Ĕ",
     "Ì", "Í", "Î", "Ĭ",
@@ -67,7 +71,8 @@ bool ThauKamLomaji(const std::string& text) {
     "Ḿ", "ḿ",
     "̀", "̂", "̄", "̋", "̌", "◌̆",
     "̍", "͘",
-    "ⁿ"
+    "ⁿ",
+    "ˊ", "ˋ", "ˇ", "^", "+",
   };
   size_t len = sizeof(pi)/sizeof(pi[0]);
   for(size_t i=0; i< len; i++) {
@@ -79,8 +84,10 @@ bool ThauKamLomaji(const std::string& text) {
   return isalpha(text.front());
 }
 
+std::string Lomaji::lianjihu_ = "-";
+
 // Sentence
-bool KamAiLianJiHu(const std::string& ting_text,
+bool Lomaji::KamAiLianjihu(const std::string& ting_text,
                     const std::string& tsit_text) {
   if (ting_text.empty() || ting_text == " ") {
     return false;
@@ -93,6 +100,14 @@ bool KamAiLianJiHu(const std::string& ting_text,
   phuann = ting_kam_lomaji && tsit_kam_lomaji;
 
   return phuann;
+}
+
+void Lomaji::SetLianjihu(const std::string lianjihu) {
+  lianjihu_ = lianjihu;
+}
+
+std::string Lomaji::GetLianjihu() {
+  return lianjihu_;
 }
 
 }
