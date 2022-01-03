@@ -6,10 +6,10 @@
 //
 #include <algorithm>
 #include <boost/range/adaptor/reversed.hpp>
-#include <rime/algo/lomaji.h>
 #include <rime/config.h>
 #include <rime/schema.h>
 #include <rime/ticket.h>
+#include <rime/algo/lomaji.h>
 #include <rime/gear/grammar.h>
 #include <rime/gear/translator_commons.h>
 
@@ -93,8 +93,8 @@ void Sentence::Extend(const DictEntry& another,
                       size_t end_pos,
                       double new_weight) {
   entry_->weight = new_weight;
-  if(KamAiLianJiHu(entry_->text, another.text)) {
-    entry_->text.append("-");
+  if(Lomaji::KamAiLianjihu(entry_->text, another.text)) {
+    entry_->text.append(Lomaji::GetLianjihu());
   }
   entry_->text.append(another.text);
   entry_->code.insert(entry_->code.end(),

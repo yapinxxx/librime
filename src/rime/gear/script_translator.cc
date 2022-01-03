@@ -17,6 +17,7 @@
 #include <rime/engine.h>
 #include <rime/schema.h>
 #include <rime/translation.h>
+#include <rime/algo/lomaji.h>
 #include <rime/algo/syllabifier.h>
 #include <rime/dict/corrector.h>
 #include <rime/dict/dictionary.h>
@@ -161,6 +162,7 @@ ScriptTranslator::ScriptTranslator(const Ticket& ticket)
                     &always_show_comments_);
     config->GetBool(name_space_ + "/enable_correction", &enable_correction_);
     config->GetInt(name_space_ + "/max_homophones", &max_homophones_);
+    config->GetBool(name_space_ + "/sutsoo_lomaji", &sutsoo_lomaji_);
     poet_.reset(new Poet(language(), config));
   }
   if (enable_correction_) {
@@ -214,7 +216,7 @@ string ScriptTranslator::Spell(const Code& code) {
   if (!dict_ || !dict_->Decode(code, &syllables) || syllables.empty())
     return result;
   result =  boost::algorithm::join(syllables,
-                                   "-");
+                                   Lomaji::GetLianjihu());
   comment_formatter_.Apply(&result);
   return result;
 }
@@ -466,7 +468,7 @@ an<Candidate> ScriptTranslation::Peek() {
   if (candidate_->preedit().empty()) {
     candidate_->set_preedit(syllabifier_->GetPreeditString(*candidate_));
   }
-  if (candidate_->comment().empty() && candidate_->type() != "sentence") {
+  if (candidate_->comment().empty() && (translator_->sutsoo_lomaji() || candidate_->type() != "sentence")) {
     auto spelling = syllabifier_->GetOriginalSpelling(*candidate_);
     bool sichoanlosu = SiChoanLoSu(candidate_->text(), spelling);
     if (!spelling.empty() && !sichoanlosu) {

@@ -15,6 +15,7 @@
 #include <rime/key_table.h>
 #include <rime/menu.h>
 #include <rime/schema.h>
+#include <rime/algo/lomaji.h>
 #include <rime/gear/speller.h>
 
 static const char kRimeAlphabet[] = "zyxwvutsrqponmlkjihgfedcba";
@@ -65,11 +66,14 @@ static bool expecting_an_initial(Context* ctx,
 
 Speller::Speller(const Ticket& ticket) : Processor(ticket),
                                          alphabet_(kRimeAlphabet) {
+  string lianjihu_ = "-";
   if (Config* config = engine_->schema()->config()) {
     config->GetString("speller/alphabet", &alphabet_);
     config->GetString("speller/delimiter", &delimiters_);
     config->GetString("speller/initials", &initials_);
     config->GetString("speller/finals", &finals_);
+    config->GetString("speller/lianjihu", &lianjihu_);
+    Lomaji::SetLianjihu(lianjihu_);
     config->GetInt("speller/max_code_length", &max_code_length_);
     config->GetBool("speller/auto_select", &auto_select_);
     config->GetBool("speller/use_space", &use_space_);
