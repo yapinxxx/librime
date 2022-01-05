@@ -472,7 +472,9 @@ an<Candidate> ScriptTranslation::Peek() {
   if (candidate_->comment().empty() && (translator_->sutsoo_lomaji() || candidate_->type() != "sentence")) {
     auto spelling = syllabifier_->GetOriginalSpelling(*candidate_);
     bool sichoanlosu = SiChoanLoSu(candidate_->text(), spelling);
-    if (!spelling.empty() && !sichoanlosu) {
+    if (!spelling.empty() && !sichoanlosu &&
+        (translator_->always_show_comments() ||
+          spelling != candidate_->preedit())) {
       candidate_->set_comment(/*quote_left + */spelling/* + quote_right*/);
     }
   }
@@ -486,9 +488,6 @@ void ScriptTranslation::PrepareCandidate() {
     return;
   }
   if (sentence_) {
-    if (sentence_->preedit().empty()) {
-      sentence_->set_preedit(syllabifier_->GetPreeditString(*sentence_));
-    }
     candidate_ = sentence_;
     return;
   }
