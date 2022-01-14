@@ -2,7 +2,7 @@ set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_over
 set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
 
 project(rime)
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.10)
 
 set(rime_version 1.5.3)
 set(rime_soversion 1)
@@ -23,7 +23,7 @@ option(BOOST_USE_CXX11 "Boost has been built with C++11 support" OFF)
 option(BOOST_USE_SIGNALS2 "Boost use signals2 instead of signals" ON)
 option(ENABLE_ASAN "Enable Address Sanitizer (Unix Only)" OFF)
 
-set(rime_data_dir "/share/rime-data" CACHE STRING "Target directory for Rime data")
+set(RIME_DATA_DIR "${CMAKE_INSTALL_FULL_DATADIR}/rime-data" CACHE STRING "Target directory for Rime data")
 
 if(WIN32)
   set(ext ".exe")
@@ -60,7 +60,7 @@ endif()
 set(BOOST_COMPONENTS filesystem regex system)
 
 if(BOOST_USE_SIGNALS2)
-  add_definitions("-DBOOST_SIGNALS2")
+  set(RIME_BOOST_SIGNALS2 1)
 else()
   set(BOOST_COMPONENTS ${BOOST_COMPONENTS} signals)
 endif()
@@ -86,7 +86,7 @@ if(ENABLE_LOGGING)
     add_definitions(-DGOOGLE_GLOG_DLL_DECL=)
   endif()
 
-  add_definitions(-DRIME_ENABLE_LOGGING)
+  set(RIME_ENABLE_LOGGING 1)
 
 endif()
 
@@ -123,6 +123,11 @@ else()
   message(WARNING "X11/keysym.h not found.")
 endif()
 
+configure_file(
+  "${PROJECT_SOURCE_DIR}/src/rime/build_config.h.in"
+  "${PROJECT_BINARY_DIR}/src/rime/build_config.h")
+
+include_directories(${PROJECT_BINARY_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/thirdparty/include)
 link_directories(${PROJECT_SOURCE_DIR}/thirdparty/lib)
@@ -143,6 +148,7 @@ if(UNIX)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 
+# keep these variables lest some Rime plugin's cmake file is still using them {
 if(NOT DEFINED LIB_INSTALL_DIR)
     set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})
 endif()
@@ -150,6 +156,7 @@ endif()
 if(NOT DEFINED BIN_INSTALL_DIR)
     set(BIN_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
 endif()
+# }
 
 # uninstall target
 configure_file(
@@ -162,27 +169,28 @@ add_custom_target(uninstall
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux|FreeBSD|DragonFly|GNU")
   set(prefix "${CMAKE_INSTALL_PREFIX}")
   set(exec_prefix "${CMAKE_INSTALL_PREFIX}")
-  set(bindir "${exec_prefix}/${BIN_INSTALL_DIR}")
-  set(libdir "${exec_prefix}/${LIB_INSTALL_DIR}")
-  set(pkgdatadir "${prefix}${rime_data_dir}")
-  set(includedir "${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+  set(bindir "${CMAKE_INSTALL_FULL_BINDIR}")
+  set(libdir "${CMAKE_INSTALL_FULL_LIBDIR}")
+  set(pkgdatadir "${RIME_DATA_DIR}")
+  set(includedir "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
   configure_file(
       ${PROJECT_SOURCE_DIR}/rime.pc.in
       ${PROJECT_BINARY_DIR}/rime.pc
       @ONLY)
   install(FILES ${PROJECT_BINARY_DIR}/rime.pc
-    DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+    DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig)
 endif()
 
-install(FILES cmake/RimeConfig.cmake DESTINATION share/cmake/rime)
+install(FILES cmake/RimeConfig.cmake
+  DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/cmake/rime)
 
 file(GLOB rime_public_header_files ${PROJECT_SOURCE_DIR}/src/*.h)
-install(FILES ${rime_public_header_files} DESTINATION include)
+install(FILES ${rime_public_header_files}
+  DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})
 
 if(BUILD_DATA)
   file(GLOB rime_preset_data_files ${PROJECT_SOURCE_DIR}/data/preset/*.yaml)
-  install(FILES ${rime_preset_data_files}
-    DESTINATION ${CMAKE_INSTALL_PREFIX}${rime_data_dir})
+  install(FILES ${rime_preset_data_files} DESTINATION ${RIME_DATA_DIR})
 endif()
 
 if(BUILD_SHARED_LIBS)

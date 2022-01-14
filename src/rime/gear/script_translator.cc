@@ -21,6 +21,7 @@
 #include <rime/algo/syllabifier.h>
 #include <rime/dict/corrector.h>
 #include <rime/dict/dictionary.h>
+#include <rime/dict/user_dictionary.h>
 #include <rime/gear/poet.h>
 #include <rime/gear/script_translator.h>
 #include <rime/gear/translator_commons.h>
@@ -123,9 +124,11 @@ class ScriptTranslation : public Translation {
  protected:
   bool CheckEmpty();
   bool IsNormalSpelling() const;
-  an<Sentence> MakeSentence(Dictionary* dict,
-                                    UserDictionary* user_dict);
   void PrepareCandidate();
+  template <class QueryResult>
+  void EnrollEntries(map<int, DictEntryList>& entries_by_end_pos,
+                     const an<QueryResult>& query_result);
+  an<Sentence> MakeSentence(Dictionary* dict, UserDictionary* user_dict);
 
   ScriptTranslator* translator_;
   Poet* poet_;
@@ -140,7 +143,6 @@ class ScriptTranslation : public Translation {
 
   DictEntryCollector::reverse_iterator phrase_iter_;
   UserDictEntryCollector::reverse_iterator user_phrase_iter_;
-  size_t user_phrase_index_ = 0;
 
   size_t max_corrections_ = 4;
   size_t correction_count_ = 0;
@@ -405,10 +407,9 @@ bool ScriptTranslation::Next() {
     }
     if (user_phrase_code_length > 0 &&
         user_phrase_code_length >= phrase_code_length) {
-      DictEntryList& entries(user_phrase_iter_->second);
-      if (++user_phrase_index_ >= entries.size()) {
+      UserDictEntryIterator& uter(user_phrase_iter_->second);
+      if (!uter.Next()) {
         ++user_phrase_iter_;
-        user_phrase_index_ = 0;
       }
     }
     else if (phrase_code_length > 0) {
@@ -471,7 +472,9 @@ an<Candidate> ScriptTranslation::Peek() {
   if (candidate_->comment().empty() && (translator_->sutsoo_lomaji() || candidate_->type() != "sentence")) {
     auto spelling = syllabifier_->GetOriginalSpelling(*candidate_);
     bool sichoanlosu = SiChoanLoSu(candidate_->text(), spelling);
-    if (!spelling.empty() && !sichoanlosu) {
+    if (!spelling.empty() && !sichoanlosu &&
+        (translator_->always_show_comments() ||
+          spelling != candidate_->preedit())) {
       candidate_->set_comment(/*quote_left + */spelling/* + quote_right*/);
     }
   }
@@ -485,9 +488,6 @@ void ScriptTranslation::PrepareCandidate() {
     return;
   }
   if (sentence_) {
-    if (sentence_->preedit().empty()) {
-      sentence_->set_preedit(syllabifier_->GetPreeditString(*sentence_));
-    }
     candidate_ = sentence_;
     return;
   }
@@ -502,8 +502,8 @@ void ScriptTranslation::PrepareCandidate() {
   an<Phrase> cand;
   if (user_phrase_code_length > 0 &&
       user_phrase_code_length >= phrase_code_length) {
-    DictEntryList& entries(user_phrase_iter_->second);
-    const auto& entry(entries[user_phrase_index_]);
+    UserDictEntryIterator& uter = user_phrase_iter_->second;
+    const auto& entry = uter.Peek();
     DLOG(INFO) << "user phrase '" << entry->text
                << "', code length: " << user_phrase_code_length;
     cand = New<Phrase>(translator_->language(),
@@ -516,8 +516,8 @@ void ScriptTranslation::PrepareCandidate() {
                       (IsNormalSpelling() ? 0.5 : -0.5));
   }
   else if (phrase_code_length > 0) {
-    DictEntryIterator& iter(phrase_iter_->second);
-    const auto& entry(iter.Peek());
+    DictEntryIterator& iter = phrase_iter_->second;
+    const auto& entry = iter.Peek();
     DLOG(INFO) << "phrase '" << entry->text
                << "', code length: " << phrase_code_length;
     cand = New<Phrase>(translator_->language(),
@@ -538,31 +538,38 @@ bool ScriptTranslation::CheckEmpty() {
   return exhausted();
 }
 
+template <class QueryResult>
+void ScriptTranslation::EnrollEntries(
+    map<int, DictEntryList>& entries_by_end_pos,
+    const an<QueryResult>& query_result) {
+  if (query_result) {
+    for (auto& y : *query_result) {
+      DictEntryList& homophones = entries_by_end_pos[y.first];
+      while (homophones.size() < translator_->max_homophones() &&
+             !y.second.exhausted()) {
+        homophones.push_back(y.second.Peek());
+        if (!y.second.Next())
+          break;
+      }
+    }
+  }
+}
+
 an<Sentence> ScriptTranslation::MakeSentence(Dictionary* dict,
                                              UserDictionary* user_dict) {
   const int kMaxSyllablesForUserPhraseQuery = 5;
   const auto& syllable_graph = syllabifier_->syllable_graph();
   WordGraph graph;
   for (const auto& x : syllable_graph.edges) {
-    UserDictEntryCollector& dest(graph[x.first]);
+    auto& same_start_pos = graph[x.first];
     if (user_dict) {
-      auto user_phrase = user_dict->Lookup(syllable_graph, x.first,
-                                           kMaxSyllablesForUserPhraseQuery);
-      if (user_phrase)
-        dest.swap(*user_phrase);
+      EnrollEntries(same_start_pos,
+                    user_dict->Lookup(syllable_graph,
+                                      x.first,
+                                      kMaxSyllablesForUserPhraseQuery));
     }
-    if (auto phrase = dict->Lookup(syllable_graph, x.first)) {
-      // merge lookup results
-      for (auto& y : *phrase) {
-        DictEntryList& entries(dest[y.first]);
-        while (entries.size() < translator_->max_homophones() &&
-               !y.second.exhausted()) {
-          entries.push_back(y.second.Peek());
-          if (!y.second.Next())
-            break;
-        }
-      }
-    }
+    // merge lookup results
+    EnrollEntries(same_start_pos, dict->Lookup(syllable_graph, x.first));
   }
   if (auto sentence =
       poet_->MakeSentence(graph,

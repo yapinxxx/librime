@@ -26,6 +26,7 @@ for:
 
 cache:
   - thirdparty.cached -> appveyor_build_thirdparty.bat
+  - thirdparty.submodule-status -> appveyor_build_thirdparty.bat
   - thirdparty\bin -> appveyor_build_thirdparty.bat
   - thirdparty\include -> appveyor_build_thirdparty.bat
   - thirdparty\lib -> appveyor_build_thirdparty.bat
@@ -66,7 +67,7 @@ deploy:
   description: "chore(release): librime $(APPVEYOR_REPO_TAG_NAME) :tada:"
   provider: GitHub
   auth_token:
-    secure: 1vXg/cmgjoy56Z8QiKHRTZAE2MfBtuvRqffkiSqnQAb8EncLbKhTizsAUTN85gix
+    secure: IWxtq+dikMJSiJBA2BaDgPCzNFys76RoPE4yZ9BTXg7J58uHvxHPZY6WdR5j53uv
   artifact: Distributables
   draft: true
   on:
