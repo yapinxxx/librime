@@ -31,6 +31,7 @@ bool Lomaji::BueKamLomaji(const std::string& text) {
     "̀", "̂", "̄", "̋", "̌", "◌̆",
     "̍", "͘",
     "ⁿ",
+    "Ṳ", "ṳ",
     "ˊ", "ˋ", "ˇ", "^", "+",
   };
   size_t len = sizeof(pi)/sizeof(pi[0]);
@@ -72,6 +73,7 @@ bool Lomaji::ThauKamLomaji(const std::string& text) {
     "̀", "̂", "̄", "̋", "̌", "◌̆",
     "̍", "͘",
     "ⁿ",
+    "Ṳ", "ṳ",
     "ˊ", "ˋ", "ˇ", "^", "+",
   };
   size_t len = sizeof(pi)/sizeof(pi[0]);
