@@ -65,7 +65,7 @@ static bool kiamtsa_kauki() {
   tm1.tm_min = 59;
   tm1.tm_sec = 0;
   tm1.tm_year = 2022-1900;
-  tm1.tm_mon = 5-1;
+  tm1.tm_mon = 7-1;
   tm1.tm_mday = 31;
   time_t kauki = mktime(&tm1);
   if(chitma > kauki){
