@@ -64,8 +64,8 @@ static bool kiamtsa_kauki() {
   tm1.tm_hour = 0;
   tm1.tm_min = 0;
   tm1.tm_sec = 0;
-  tm1.tm_year = 2023-1900;
-  tm1.tm_mon = 12-1;
+  tm1.tm_year = 2024-1900;
+  tm1.tm_mon = 2-1;
   tm1.tm_mday = 1;
   time_t kauki = mktime(&tm1);
   if(chitma > kauki){
